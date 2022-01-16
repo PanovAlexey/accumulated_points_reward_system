@@ -14,3 +14,6 @@ logs:
 
 build:
 	go build -o ./build/gophermart ./cmd/gophermart
+
+exec:
+	cd .docker && docker-compose exec reward-go-backend bash
