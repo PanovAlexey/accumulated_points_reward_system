@@ -8,3 +8,6 @@ recreate:
 	cd .docker && docker-compose down
 	cd .docker && docker-compose up -d --build --force-recreate
 	cd .docker && docker-compose up -d
+
+logs:
+	cd .docker && docker logs reward_go
