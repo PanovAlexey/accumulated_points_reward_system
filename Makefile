@@ -17,3 +17,6 @@ build:
 
 exec:
 	cd .docker && docker-compose exec reward-go-backend bash
+
+test:
+	go test ../...
