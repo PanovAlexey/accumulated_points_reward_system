@@ -11,3 +11,6 @@ recreate:
 
 logs:
 	cd .docker && docker logs reward_go
+
+build:
+	go build -o ./build/gophermart ./cmd/gophermart
