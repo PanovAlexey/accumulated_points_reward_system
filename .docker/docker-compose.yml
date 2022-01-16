@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+  reward-go-backend:
+    container_name: reward_go
+    image: golang:1.18-alpine
+    ports:
+      - "8080:8080"
+    networks:
+      - reward-backend
+    environment:
+      - app_name=go-reward
+      - port=8080
+    volumes:
+      - ../:/app
+    working_dir: /app
+    command: go run cmd/gophermart/main.go
+networks:
+  reward-backend:
+    driver: bridge
