@@ -14,6 +14,32 @@ services:
       - ../:/app
     working_dir: /app
     command: go run cmd/gophermart/main.go
+
+  reward-postgres:
+    container_name: reward_postgres_container
+    image: postgres:14.2
+    restart: always
+    environment:
+      POSTGRES_DB: "postgresql"
+      POSTGRES_USER: "postgresql_user"
+      POSTGRES_PASSWORD: "user_password"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - .:/var/lib/postgresql/data
+    ports:
+      - "54320:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgresql_user -d postgresql" ]
+      timeout: 45s
+      interval: 2s
+      retries: 10
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+    networks:
+      - reward-backend
 networks:
   reward-backend:
     driver: bridge
