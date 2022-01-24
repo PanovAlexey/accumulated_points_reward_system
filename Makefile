@@ -4,6 +4,9 @@ up:
 down:
 	cd .docker && docker-compose down
 
+restart:
+	cd .docker && docker-compose restart
+
 recreate:
 	cd .docker && docker-compose down
 	cd .docker && docker-compose up -d --build --force-recreate
