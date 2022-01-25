@@ -11,5 +11,7 @@ func NewHandler() *httpHandler {
 func (h *httpHandler) InitRoutes() *gin.Engine {
 	router := gin.New()
 
+	router.GET("/ping", h.HandlePingDatabase)
+
 	return router
 }
