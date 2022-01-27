@@ -3,7 +3,6 @@ package config
 import "os"
 
 type serverConfig struct {
-	port    string
 	address string
 }
 
@@ -14,12 +13,9 @@ type config struct {
 func NewConfig() config {
 	config := config{}
 	config = initConfigByEnv(config)
+	config = initConfigByFlag(config)
 
 	return config
-}
-
-func (c config) GetServerPort() string {
-	return c.server.port
 }
 
 func (c config) GetServerAddress() string {
@@ -27,8 +23,7 @@ func (c config) GetServerAddress() string {
 }
 
 func initConfigByEnv(c config) config {
-	c.server.port = getEnv("SERVER_PORT", "8080")
-	c.server.address = getEnv("SERVER_ADDRESS", "localhost")
+	c.server.address = getEnv("RUN_ADDRESS", "0.0.0.0:8080")
 
 	return c
 }
