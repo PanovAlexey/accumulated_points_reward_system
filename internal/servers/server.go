@@ -11,7 +11,7 @@ type Server struct {
 
 func (s *Server) Run(config serviceConfigInterface, handler http.Handler) error {
 	s.httpServer = &http.Server{
-		Addr:           config.GetServerAddress() + ":" + config.GetServerPort(),
+		Addr:           config.GetServerAddress(),
 		Handler:        handler,
 		MaxHeaderBytes: 1 << 20, // 1 MB
 		ReadTimeout:    10 * time.Second,
