@@ -1,6 +1,10 @@
 package config
 
-import "os"
+import (
+	"flag"
+	"fmt"
+	"os"
+)
 
 type serverConfig struct {
 	address string
@@ -26,6 +30,23 @@ func initConfigByEnv(c config) config {
 	c.server.address = getEnv("RUN_ADDRESS", "0.0.0.0:8080")
 
 	return c
+}
+
+func initConfigByFlag(config config) config {
+	if flag.Parsed() {
+		fmt.Println("Error occurred. Re-initializing the config")
+		return config
+	}
+
+	serverAddress := flag.String("a", "", "RUN_ADDRESS")
+
+	flag.Parse()
+
+	if len(*serverAddress) > 0 {
+		config.server.address = *serverAddress
+	}
+
+	return config
 }
 
 func getEnv(key string, defaultValue string) string {
