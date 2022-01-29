@@ -1,6 +1,7 @@
 package servers
 
 import (
+	"github.com/PanovAlexey/accumulated_points_reward_system/config"
 	"net/http"
 	"time"
 )
@@ -9,7 +10,7 @@ type Server struct {
 	httpServer *http.Server
 }
 
-func (s *Server) Run(config serviceConfigInterface, handler http.Handler) error {
+func (s *Server) Run(config config.Config, handler http.Handler) error {
 	s.httpServer = &http.Server{
 		Addr:           config.GetServerAddress(),
 		Handler:        handler,
