@@ -9,14 +9,14 @@ import (
 )
 
 func main() {
-	logger := logging.GetLogger()
+	config := config.NewConfig()
+	logger := logging.GetLogger(config)
 	defer logger.Close()
 
 	if err := godotenv.Load(); err != nil {
 		logger.Fatalf("error loading env variables: %s", err.Error())
 	}
 
-	config := config.NewConfig()
 	handler := http.NewHandler()
 	server := new(servers.Server)
 
