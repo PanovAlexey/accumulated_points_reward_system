@@ -1,6 +1,7 @@
 package logging
 
 import (
+	"github.com/PanovAlexey/accumulated_points_reward_system/config"
 	"github.com/getsentry/sentry-go"
 	"go.uber.org/zap"
 	"log"
@@ -11,14 +12,14 @@ type logger struct {
 	zap *zap.SugaredLogger
 }
 
-func GetLogger() LoggerInterface {
+func GetLogger(config config.Config) LoggerInterface {
 	zapLogger, err := zap.NewProduction()
 
 	if err != nil {
 		log.Fatalf("can't initialize zap logger: %v", err)
 	}
 
-	initSentry()
+	initSentry(config.GetAppEnvironment(), config.GetAppLoggerDsn(), config.IsAppDebugMode())
 
 	return logger{zap: zapLogger.Sugar()}
 }
@@ -82,16 +83,16 @@ func (l logger) Close() {
 	l.zap.Sync()
 }
 
-func initSentry() {
+func initSentry(environment, dsn string, isDebug bool) {
 	err := sentry.Init(sentry.ClientOptions{
 		// Either set your DSN here or set the SENTRY_DSN environment variable.
-		Dsn: "https://1e8c898aac7c45259639d9a6eae5a926@o1210124.ingest.sentry.io/6345772", // @TODO
+		Dsn: dsn,
 		// Either set environment and release here or set the SENTRY_ENVIRONMENT
 		// and SENTRY_RELEASE environment variables.
-		Environment: "", // @TODO
+		Environment: environment,
 		// Enable printing of SDK debug messages.
 		// Useful when getting started or trying to figure something out.
-		Debug: true, // @TODO
+		Debug: isDebug,
 	})
 	if err != nil {
 		log.Fatalf("sentry.Init: %s", err)
