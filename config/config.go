@@ -10,29 +10,51 @@ type serverConfig struct {
 	address string
 }
 
-type config struct {
-	server serverConfig
+type applicationConfig struct {
+	environment string
+	loggerDsn   string
+	isDebug     bool
 }
 
-func NewConfig() config {
-	config := config{}
+type Config struct {
+	server      serverConfig
+	application applicationConfig
+}
+
+func NewConfig() Config {
+	config := Config{}
 	config = initConfigByEnv(config)
 	config = initConfigByFlag(config)
 
 	return config
 }
 
-func (c config) GetServerAddress() string {
+func (c Config) GetServerAddress() string {
 	return c.server.address
 }
 
-func initConfigByEnv(c config) config {
+func (c Config) GetAppEnvironment() string {
+	return c.application.environment
+}
+
+func (c Config) GetAppLoggerDsn() string {
+	return c.application.loggerDsn
+}
+
+func (c Config) IsAppDebugMode() bool {
+	return c.application.isDebug
+}
+
+func initConfigByEnv(c Config) Config {
 	c.server.address = getEnv("RUN_ADDRESS", "0.0.0.0:8080")
+	c.application.isDebug = getEnv("IS_DEBUG", "false") == "true"
+	c.application.environment = getEnv("ENVIRONMENT", "dev")
+	c.application.loggerDsn = getEnv("LOGGER_DSN", "")
 
 	return c
 }
 
-func initConfigByFlag(config config) config {
+func initConfigByFlag(config Config) Config {
 	if flag.Parsed() {
 		fmt.Println("Error occurred. Re-initializing the config")
 		return config
