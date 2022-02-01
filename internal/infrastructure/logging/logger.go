@@ -80,7 +80,11 @@ func (l logger) Close() {
 	// Flush buffered events before the program terminates.
 	// Set the timeout to the maximum duration the program can afford to wait.
 	sentry.Flush(time.Second * 2)
-	l.zap.Sync()
+	err := l.zap.Sync()
+
+	if err != nil {
+		l.Error("zap exit error")
+	}
 }
 
 func initSentry(environment, dsn string, isDebug bool) {
