@@ -2,6 +2,7 @@ package http
 
 import (
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/application/service"
+	"github.com/PanovAlexey/accumulated_points_reward_system/internal/handlers/http/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -22,6 +23,7 @@ func (h *httpHandler) InitRoutes() *gin.Engine {
 
 	api := router.Group("/api")
 	{
+		api.Use(middleware.JSON())
 		user := api.Group("/user")
 		{
 			user.POST("/register", h.register)
