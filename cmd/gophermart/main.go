@@ -12,10 +12,6 @@ import (
 )
 
 func main() {
-	if err := godotenv.Load(); err != nil {
-		log.Fatalf("error loading env variables: %s", err.Error())
-	}
-
 	config := config.NewConfig()
 	logger := logging.GetLogger(config)
 
@@ -33,4 +29,9 @@ func main() {
 }
 
 func init() {
+	if err := godotenv.Load(); err != nil {
+		log.Fatalf("error loading env variables: %s", err.Error())
+	}
+}
+
 }
