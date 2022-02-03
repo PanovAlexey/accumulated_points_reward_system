@@ -8,16 +8,18 @@ import (
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/infrastructure/repository"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/servers"
 	"github.com/joho/godotenv"
+	"log"
 )
 
 func main() {
+	if err := godotenv.Load(); err != nil {
+		log.Fatalf("error loading env variables: %s", err.Error())
+	}
+
 	config := config.NewConfig()
 	logger := logging.GetLogger(config)
-	defer logger.Close()
 
-	if err := godotenv.Load(); err != nil {
-		logger.Fatalf("error loading env variables: %s", err.Error())
-	}
+	defer logger.Close()
 
 	userRegistrationRepository := repository.NewUserRepository()
 	userRegistrationSerice := service.NewUserRegistrationService(userRegistrationRepository)
