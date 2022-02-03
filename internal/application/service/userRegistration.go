@@ -2,7 +2,7 @@ package service
 
 import (
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/application/repository"
-	"os/user"
+	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain"
 )
 
 type UserRegistration struct {
@@ -15,12 +15,12 @@ func NewUserRegistrationService(userRepository repository.UserRepository) *UserR
 	}
 }
 
-func (service UserRegistration) Register(user user.User) (user.User, error) {
+func (service UserRegistration) Register(user domain.User) (domain.User, error) {
 	//@ToDo
 	return user, nil
 }
 
-func (service UserRegistration) Auth(userName, password string) (user.User, error) {
+func (service UserRegistration) Auth(userName, password string) (domain.User, error) {
 	//@ToDo
-	return user.User{}, nil
+	return domain.User{}, nil
 }
