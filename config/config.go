@@ -10,6 +10,10 @@ type serverConfig struct {
 	address string
 }
 
+type storageConfig struct {
+	databaseDsn string
+}
+
 type applicationConfig struct {
 	environment string
 	loggerDsn   string
@@ -19,6 +23,7 @@ type applicationConfig struct {
 type Config struct {
 	server      serverConfig
 	application applicationConfig
+	storage     storageConfig
 }
 
 func NewConfig() Config {
@@ -45,11 +50,16 @@ func (c Config) IsAppDebugMode() bool {
 	return c.application.isDebug
 }
 
+func (c Config) GetDatabaseDsn() string {
+	return c.storage.databaseDsn
+}
+
 func initConfigByEnv(c Config) Config {
 	c.server.address = getEnv("RUN_ADDRESS", "0.0.0.0:8080")
 	c.application.isDebug = getEnv("IS_DEBUG", "false") == "true"
 	c.application.environment = getEnv("ENVIRONMENT", "dev")
 	c.application.loggerDsn = getEnv("LOGGER_DSN", "")
+	c.storage.databaseDsn = getEnv("DATABASE_DSN", "")
 
 	return c
 }
