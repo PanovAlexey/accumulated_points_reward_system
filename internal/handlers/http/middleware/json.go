@@ -11,5 +11,7 @@ func JSON() gin.HandlerFunc {
 			http.Error(c.Writer, "Invalid Content-Type", http.StatusBadRequest)
 			return
 		}
+
+		c.Writer.Header().Set("Content-Type", "application/json")
 	}
 }
