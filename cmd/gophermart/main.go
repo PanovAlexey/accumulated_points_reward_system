@@ -24,7 +24,7 @@ func main() {
 	userRegistrationRepository := repository.NewUserRepository()
 	userRegistrationSerice := service.NewUserRegistrationService(userRegistrationRepository)
 
-	handler := http.NewHandler(userRegistrationSerice)
+	handler := http.NewHandler(logger, userRegistrationSerice)
 	server := new(servers.Server)
 
 	if err := server.Run(config, handler.InitRoutes()); err != nil {
