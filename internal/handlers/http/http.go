@@ -3,15 +3,18 @@ package http
 import (
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/application/service"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/handlers/http/middleware"
+	"github.com/PanovAlexey/accumulated_points_reward_system/internal/infrastructure/logging"
 	"github.com/gin-gonic/gin"
 )
 
 type httpHandler struct {
+	logger                  logging.LoggerInterface
 	userRegistrationService *service.UserRegistration
 }
 
-func NewHandler(userRegistrationService *service.UserRegistration) *httpHandler {
+func NewHandler(logger logging.LoggerInterface, userRegistrationService *service.UserRegistration) *httpHandler {
 	return &httpHandler{
+		logger:                  logger,
 		userRegistrationService: userRegistrationService,
 	}
 }
