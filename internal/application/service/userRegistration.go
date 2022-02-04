@@ -16,8 +16,7 @@ func NewUserRegistrationService(userRepository repository.UserRepository) *UserR
 }
 
 func (service UserRegistration) Register(user domain.User) (domain.User, error) {
-	//@ToDo
-	return user, nil
+	return service.userRepository.CreateUser(user)
 }
 
 func (service UserRegistration) Auth(userName, password string) (domain.User, error) {
