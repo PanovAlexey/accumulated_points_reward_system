@@ -19,7 +19,7 @@ func (service UserRegistration) Register(user domain.User) (domain.User, error) 
 	return service.userRepository.CreateUser(user)
 }
 
-func (service UserRegistration) Auth(userName, password string) (domain.User, error) {
+func (service UserRegistration) Auth(login, password string) (domain.User, error) {
 	//@ToDo
 	return domain.User{}, nil
 }

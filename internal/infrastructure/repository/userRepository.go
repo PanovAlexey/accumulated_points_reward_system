@@ -19,7 +19,7 @@ func (repository userRepository) CreateUser(user domain.User) (domain.User, erro
 	return user, nil
 }
 
-func (repository userRepository) GetUser(userName, password string) (domain.User, error) {
+func (repository userRepository) GetUser(login, password string) (domain.User, error) {
 	//@ToDo
 	return domain.User{}, nil
 }
