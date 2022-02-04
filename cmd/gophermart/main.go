@@ -4,9 +4,11 @@ import (
 	"github.com/PanovAlexey/accumulated_points_reward_system/config"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/application/service"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/handlers/http"
+	"github.com/PanovAlexey/accumulated_points_reward_system/internal/infrastructure/databases"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/infrastructure/logging"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/infrastructure/repository"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/servers"
+	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	"log"
 )
@@ -17,10 +19,12 @@ func main() {
 
 	defer logger.Close()
 
-	userRegistrationRepository := repository.NewUserRepository()
-	userRegistrationSerice := service.NewUserRegistrationService(userRegistrationRepository)
+	db := getDatabaseConnector(logger, config)
 
-	handler := http.NewHandler(logger, userRegistrationSerice)
+	userRegistrationRepository := repository.NewUserRepository(db)
+	userRegistrationService := service.NewUserRegistrationService(userRegistrationRepository)
+
+	handler := http.NewHandler(logger, userRegistrationService)
 	server := new(servers.Server)
 
 	if err := server.Run(config, handler.InitRoutes()); err != nil {
@@ -34,4 +38,11 @@ func init() {
 	}
 }
 
+func getDatabaseConnector(logger logging.LoggerInterface, config config.Config) *sqlx.DB {
+	db, err := databases.NewPostgresDB(config.GetDatabaseDsn())
+	if err != nil {
+		logger.Fatalf("error occurred while initializing database connection: %s", err.Error())
+	}
+
+	return db
 }
