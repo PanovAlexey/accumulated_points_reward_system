@@ -11,6 +11,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	"log"
+	"time"
 )
 
 func main() {
@@ -23,7 +24,10 @@ func main() {
 	defer db.Close()
 
 	migrationService := databases.GetMigrationService(db)
+	migrationService.MigrateDown()
 	migrationService.MigrateUp()
+
+	time.Sleep(time.Second * 1)
 
 	userRegistrationRepository := repository.NewUserRepository(db)
 	userRegistrationService := service.NewUserRegistrationService(userRegistrationRepository)
@@ -39,6 +43,7 @@ func main() {
 	synchronizationWithScoringSystemService := service.NewSynchronizationWithScoringSystemService(
 		*orderLoaderService, *paymentManagement, logger, config.GetAccrualSystemAddress(),
 	)
+
 	go synchronizationWithScoringSystemService.Init()
 
 	handler := httpProject.NewHandler(logger, userRegistrationService, orderLoaderService, paymentManagement)
@@ -57,6 +62,7 @@ func init() {
 
 func getDatabaseConnector(logger logging.LoggerInterface, config config.Config) *sqlx.DB {
 	db, err := databases.NewPostgresDB(config.GetDatabaseDsn())
+
 	if err != nil {
 		logger.Fatalf("error occurred while initializing database connection: %s", err.Error())
 	}

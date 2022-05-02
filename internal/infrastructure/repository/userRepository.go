@@ -23,11 +23,15 @@ func (repository userRepository) CreateUser(user entity.User) (entity.User, erro
 	)
 
 	if err == nil {
-		var insertID int
+		var insertID int64
 		rows.Next()
-		rows.Scan(&insertID)
+		err = rows.Scan(&insertID)
 
-		user.ID.Scan(insertID)
+		user.ID.Int64 = insertID
+
+		if err != nil {
+			return user, err
+		}
 
 		if rows.Err() != nil {
 			err = rows.Err()

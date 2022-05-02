@@ -43,7 +43,13 @@ func (service PaymentsManagement) GetUserBalance(userID int64) (float64, error) 
 }
 
 func (service PaymentsManagement) GetTotalWithdrawn(userID int64) (float64, error) {
-	return service.paymentRepository.GetTotalWithdrawn(userID)
+	totalWithdrawn, err := service.paymentRepository.GetTotalWithdrawn(userID)
+
+	if totalWithdrawn < 0 {
+		totalWithdrawn = totalWithdrawn * (-1)
+	}
+
+	return totalWithdrawn, err
 }
 
 func (service PaymentsManagement) GetWithdrawals(userID int64) ([]dto.WithdrawalsOutputDto, error) {

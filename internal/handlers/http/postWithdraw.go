@@ -14,7 +14,7 @@ import (
 func (h *httpHandler) postWithdraw(c *gin.Context) {
 	userCtxValue, isExist := c.Get(h.userRegistrationService.GetUserCtx())
 
-	if isExist == false {
+	if !isExist {
 		responses.NewErrorResponse(c, http.StatusInternalServerError, "it is no info about user in context.")
 		h.logger.Error("it is no info about user in context.")
 
@@ -68,6 +68,7 @@ func (h *httpHandler) postWithdraw(c *gin.Context) {
 				"error creating order for withdraw. Order number "+orderInputDto.Order,
 			)
 			h.logger.Error("error creating order for withdraw. Order number " + orderInputDto.Order)
+
 			return
 		}
 	}

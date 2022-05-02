@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-const orderProcessingFrequencyInterval = 10 * time.Second
+const orderProcessingFrequencyInterval = 1 * time.Second
 
 type SynchronizationWithScoringSystemService struct {
 	orderService         OrderLoader
@@ -36,7 +36,7 @@ func NewSynchronizationWithScoringSystemService(
 }
 
 func (service SynchronizationWithScoringSystemService) Init() {
-	for true {
+	for {
 		service.step()
 		time.Sleep(orderProcessingFrequencyInterval)
 	}
@@ -78,26 +78,45 @@ func (service SynchronizationWithScoringSystemService) GetOrderStatusInScoringSy
 	bonusPointsSystemResponse := dto.BonusPointsSystemResponse{}
 	err = json.Unmarshal(responseBody, &bonusPointsSystemResponse)
 
+	if err != nil {
+		return nil, err
+	}
+
 	return &bonusPointsSystemResponse, nil
 }
 
 func (service SynchronizationWithScoringSystemService) handleOrderByStatusInScoringSystem(
 	order entity.Order, response dto.BonusPointsSystemResponse,
 ) {
-	if response.Status == "REGISTERED" {
+	/*if response.Status == "REGISTERED" {
 		// @ToDo: do something
-	}
+	}*/
 
 	if response.Status == "INVALID" {
-		service.orderService.SetInvalidStatus(order)
+		err := service.orderService.SetInvalidStatus(order)
+
+		if err != nil {
+			service.logger.Error("error when trying to set INVALID order status to " + order.Number + err.Error())
+			return
+		}
 	}
 
 	if response.Status == "PROCESSING" {
-		service.orderService.SetProcessingStatus(order)
+		err := service.orderService.SetProcessingStatus(order)
+
+		if err != nil {
+			service.logger.Error("error when trying to set PROCESSING order status to " + order.Number + err.Error())
+			return
+		}
 	}
 
 	if response.Status == "PROCESSED" {
-		service.orderService.SetProcessedStatus(order)
+		err := service.orderService.SetProcessedStatus(order)
+
+		if err != nil {
+			service.logger.Error("error when trying to set PROCESSED order status to " + order.Number + err.Error())
+			return
+		}
 
 		if response.Accrual > 0 {
 			payment, err := service.paymentsManagement.Debt(order, response.Accrual)
