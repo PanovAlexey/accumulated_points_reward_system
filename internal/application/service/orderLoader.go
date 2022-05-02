@@ -37,10 +37,7 @@ func (service OrderLoader) PostOrder(number string, userID int64) (*entity.Order
 		return nil, err
 	}
 
-	if order == nil {
-		newOrder := entity.NewOrder(numberInt, service.statusGetter.GetRegisteredStatusID(), userID)
-		order = &newOrder
-	} else {
+	if order != nil {
 		if order.UserID.Int64 == userID {
 			return order, fmt.Errorf("%v: %w", number, applicationErrors.ErrorOrderAlreadySent)
 		} else {
@@ -65,7 +62,7 @@ func (service OrderLoader) GetOrderByNumber(number int64) (*entity.Order, error)
 
 func (service OrderLoader) SaveOrder(number int64, userID int64) (*entity.Order, error) {
 	order, err := service.orderRepository.CreateOrder(
-		entity.NewOrder(number, service.statusGetter.GetRegisteredStatusID(), userID),
+		*entity.NewOrder(number, service.statusGetter.GetRegisteredStatusID(), userID),
 	)
 
 	return &order, err

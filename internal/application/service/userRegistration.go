@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	userCtx    = "userId"
+	userCtx    = "userID"
 	salt       = "wertyuiopasdfghjkl"
 	tokenTTL   = 12 * time.Hour
 	signingKey = "qweqr78939870424&(#$@"
@@ -44,13 +44,25 @@ func (service UserRegistration) Register(user entity.User) (entity.User, error) 
 		return user, fmt.Errorf("%v: %w", user.Login, applicationErrors.ErrorUserAlreadyExists)
 	}
 
-	user.Password = service.generatePasswordHash(user.Password)
+	passwordHash, err := service.generatePasswordHash(user.Password)
+
+	if err != nil {
+		return entity.User{}, err
+	}
+
+	user.Password = passwordHash
 
 	return service.userRepository.CreateUser(user)
 }
 
 func (service UserRegistration) Auth(login, password string) (entity.User, error) {
-	return service.userRepository.GetUser(login, service.generatePasswordHash(password))
+	passwordHash, err := service.generatePasswordHash(password)
+
+	if err != nil {
+		return entity.User{}, err
+	}
+
+	return service.userRepository.GetUser(login, passwordHash)
 }
 
 func (service UserRegistration) GenerateToken(userID int) (string, error) {
@@ -89,9 +101,9 @@ func (service UserRegistration) ParseToken(accessToken string) (int, error) {
 	return claims.UserID, nil
 }
 
-func (service UserRegistration) generatePasswordHash(password string) string {
+func (service UserRegistration) generatePasswordHash(password string) (string, error) {
 	hash := sha1.New()
-	hash.Write([]byte(password))
+	_, err := hash.Write([]byte(password))
 
-	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
+	return fmt.Sprintf("%x", hash.Sum([]byte(salt))), err
 }

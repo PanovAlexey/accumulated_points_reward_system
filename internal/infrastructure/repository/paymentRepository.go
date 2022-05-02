@@ -42,8 +42,18 @@ func (repository paymentRepository) GetBalance(userID int64) (float64, error) {
 func (repository paymentRepository) Create(userID, orderID int64, sum float64) (entity.Payment, error) {
 	var payment entity.Payment
 
-	payment.Order.Scan(orderID)
-	payment.UserID.Scan(userID)
+	err := payment.Order.Scan(orderID)
+
+	if err != nil {
+		return payment, err
+	}
+
+	err = payment.UserID.Scan(userID)
+
+	if err != nil {
+		return payment, err
+	}
+
 	payment.Sum = sum
 	payment.ProcessedAt = time.Now().Format(time.RFC3339)
 
@@ -57,12 +67,13 @@ func (repository paymentRepository) Create(userID, orderID int64, sum float64) (
 	if err == nil {
 		var insertID int
 		rows.Next()
-		rows.Scan(&insertID)
+		err = rows.Scan(&insertID)
+		if err != nil {
+			err = payment.ID.Scan(insertID)
 
-		payment.ID.Scan(insertID)
-
-		if rows.Err() != nil {
-			err = rows.Err()
+			if rows.Err() != nil {
+				err = rows.Err()
+			}
 		}
 	} else {
 		if rows.Err() != nil {
@@ -88,7 +99,7 @@ func (repository paymentRepository) GetOrderIDToPaymentMap(orderIDList []int64) 
 	var payments []entity.Payment
 	err := repository.db.Select(
 		&payments,
-		"SELECT id, user_id, order_id, processed_at, sum FROM "+databases.PaymentsTableNameConst+" WHERE "+ordersIDString,
+		"SELECT id, user_id, order_id, processed_at, sum FROM "+databases.PaymentsTableNameConst+" WHERE sum >0 AND "+ordersIDString,
 	)
 
 	if err != nil {

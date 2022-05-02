@@ -11,7 +11,7 @@ import (
 func (h *httpHandler) getOrders(c *gin.Context) {
 	userCtxValue, isExist := c.Get(h.userRegistrationService.GetUserCtx())
 
-	if isExist == false {
+	if !isExist {
 		responses.NewErrorResponse(c, http.StatusInternalServerError, "it is no info about user in context.")
 		h.logger.Error("it is no info about user in context.")
 
@@ -35,6 +35,13 @@ func (h *httpHandler) getOrders(c *gin.Context) {
 	}
 
 	orderIDToPaymentMap, err := h.paymentManagement.GetOrderIDToPaymentMap(*orders)
+
+	if err != nil {
+		responses.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		h.logger.Error(err.Error())
+
+		return
+	}
 
 	var orderOutputs []dto.OrderOutputDto
 

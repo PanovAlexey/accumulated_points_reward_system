@@ -2,7 +2,6 @@ package repository
 
 import (
 	"database/sql"
-	"errors"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/application/repository"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain/entity"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/infrastructure/databases"
@@ -29,16 +28,16 @@ func (repository orderRepository) CreateOrder(order entity.Order) (entity.Order,
 	if err == nil {
 		var insertID int
 		rows.Next()
-		rows.Scan(&insertID)
+		err = rows.Scan(&insertID)
 
-		order.ID.Scan(insertID)
+		if err != nil {
+			return order, err
+		}
+
+		err = order.ID.Scan(insertID)
 
 		if rows.Err() != nil {
 			err = rows.Err()
-		}
-	} else {
-		if rows.Err() != nil {
-			err = errors.New(err.Error() + rows.Err().Error())
 		}
 	}
 

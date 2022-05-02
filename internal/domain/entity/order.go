@@ -14,12 +14,21 @@ type Order struct {
 	UploadedAt string        `json:"uploaded_at" db:"uploaded_at" binding:"required"`
 }
 
-func NewOrder(number int64, status int, userID int64) Order {
+func NewOrder(number int64, status int, userID int64) *Order {
 	var userIDNullInt, statusIDNullInt sql.NullInt64
-	userIDNullInt.Scan(userID)
-	statusIDNullInt.Scan(status)
+	err := userIDNullInt.Scan(userID)
 
-	return Order{
+	if err != nil {
+		return nil
+	}
+
+	err = statusIDNullInt.Scan(status)
+
+	if err != nil {
+		return nil
+	}
+
+	return &Order{
 		Number:     strconv.FormatInt(number, 10),
 		Status:     statusIDNullInt,
 		UserID:     userIDNullInt,

@@ -39,7 +39,7 @@ func Authorization(tokenParserService TokenParsing) gin.HandlerFunc {
 			return
 		}
 
-		userId, err := tokenParserService.ParseToken(headerParts[1])
+		userID, err := tokenParserService.ParseToken(headerParts[1])
 
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, err.Error())
@@ -47,6 +47,6 @@ func Authorization(tokenParserService TokenParsing) gin.HandlerFunc {
 			return
 		}
 
-		c.Set(tokenParserService.GetUserCtx(), userId)
+		c.Set(tokenParserService.GetUserCtx(), userID)
 	}
 }

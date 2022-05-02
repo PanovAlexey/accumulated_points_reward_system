@@ -9,7 +9,7 @@ import (
 func (h *httpHandler) getWithdrawals(c *gin.Context) {
 	userCtxValue, isExist := c.Get(h.userRegistrationService.GetUserCtx())
 
-	if isExist == false {
+	if !isExist {
 		responses.NewErrorResponse(c, http.StatusInternalServerError, "it is no info about user in context.")
 		h.logger.Error("it is no info about user in context.")
 
