@@ -15,6 +15,13 @@ func NewUserRepository(db *sqlx.DB) repository.UserRepository {
 }
 
 func (repository userRepository) CreateUser(user domain.User) (domain.User, error) {
+	_, err := repository.db.NamedExec(
+		`INSERT INTO `+databases.Users_table_name+` (login, password) VALUES (:login, :password)`,
+		user,
+	)
+
+	return user, err
+}
 
 	return user, nil
 }
