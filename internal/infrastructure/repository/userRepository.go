@@ -48,9 +48,9 @@ func (repository userRepository) GetUser(login, passwordHash string) (domain.Use
 	err := repository.db.Get(
 		&user,
 		"SELECT * FROM "+databases.Users_table_name+" WHERE login = $1 and password = $2 LIMIT 1",
-		"login",
-		"passwordHash",
+		login,
+		passwordHash,
 	)
 
-	return domain.User{}, err
+	return user, err
 }
