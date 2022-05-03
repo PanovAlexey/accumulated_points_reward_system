@@ -47,3 +47,20 @@ func (service UserRegistration) Auth(login, password string) (domain.User, error
 	//@ToDo
 	return domain.User{}, nil
 }
+
+func (service UserRegistration) GenerateToken(login, password string) (string, error) {
+	user, err := service.userRepository.GetUser(login, service.generatePasswordHash(password))
+	if err != nil {
+		return "", err
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
+		jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(tokenTTL).Unix(),
+			IssuedAt:  time.Now().Unix(),
+		},
+		int(user.Id.Int64),
+	})
+
+	return token.SignedString([]byte(signingKey))
+}
