@@ -64,3 +64,10 @@ func (service UserRegistration) GenerateToken(login, password string) (string, e
 
 	return token.SignedString([]byte(signingKey))
 }
+
+func (service UserRegistration) generatePasswordHash(password string) string {
+	hash := sha1.New()
+	hash.Write([]byte(password))
+
+	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
+}
