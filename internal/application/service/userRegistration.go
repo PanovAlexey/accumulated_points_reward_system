@@ -4,6 +4,10 @@ import (
 	"errors"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/application/repository"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain"
+const (
+	salt       = "wertyuiopasdfghjkl"
+	tokenTTL   = 12 * time.Hour
+	signingKey = "qweqr78939870424&(#$@"
 )
 
 type UserRegistration struct {
