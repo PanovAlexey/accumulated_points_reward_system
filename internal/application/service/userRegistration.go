@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/application/repository"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain"
 )
@@ -16,6 +17,12 @@ func NewUserRegistrationService(userRepository repository.UserRepository) *UserR
 }
 
 func (service UserRegistration) Register(user domain.User) (domain.User, error) {
+	isLoginExist, _ := service.userRepository.IsLoginExist(user.Login)
+
+	if isLoginExist {
+		return user, errors.New("user already exists") // @ToDo create custom error
+	}
+
 	return service.userRepository.CreateUser(user)
 }
 
