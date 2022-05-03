@@ -36,6 +36,13 @@ func (repository userRepository) IsLoginExist(login string) (bool, error) {
 }
 
 func (repository userRepository) GetUser(login, password string) (domain.User, error) {
-	//@ToDo
-	return domain.User{}, nil
+	user := domain.User{}
+	err := repository.db.Get(
+		&user,
+		"SELECT * FROM "+databases.Users_table_name+" WHERE login = $1 and password = $2 LIMIT 1",
+		"login",
+		"password",
+	)
+
+	return domain.User{}, err
 }
