@@ -16,10 +16,20 @@ func NewUserRepository(db *sqlx.DB) repository.UserRepository {
 }
 
 func (repository userRepository) CreateUser(user domain.User) (domain.User, error) {
-	_, err := repository.db.NamedExec(
-		`INSERT INTO `+databases.Users_table_name+` (login, password) VALUES (:login, :password)`,
+	rows, err := repository.db.NamedQuery(
+		`INSERT INTO `+databases.Users_table_name+` (login, password) VALUES (:login, :password) RETURNING id, password`,
 		user,
 	)
+
+	if err == nil {
+		var insertID int
+		var insertPasswordHash string
+		rows.Next()
+		rows.Scan(&insertID, &insertPasswordHash)
+
+		user.Id.Scan(insertID)
+		user.Password = insertPasswordHash
+	}
 
 	return user, err
 }
@@ -35,13 +45,13 @@ func (repository userRepository) IsLoginExist(login string) (bool, error) {
 	return user.Id.Valid, err
 }
 
-func (repository userRepository) GetUser(login, password string) (domain.User, error) {
+func (repository userRepository) GetUser(login, passwordHash string) (domain.User, error) {
 	user := domain.User{}
 	err := repository.db.Get(
 		&user,
 		"SELECT * FROM "+databases.Users_table_name+" WHERE login = $1 and password = $2 LIMIT 1",
 		"login",
-		"password",
+		"passwordHash",
 	)
 
 	return domain.User{}, err
