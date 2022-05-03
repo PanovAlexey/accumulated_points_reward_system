@@ -17,18 +17,16 @@ func NewUserRepository(db *sqlx.DB) repository.UserRepository {
 
 func (repository userRepository) CreateUser(user domain.User) (domain.User, error) {
 	rows, err := repository.db.NamedQuery(
-		`INSERT INTO `+databases.Users_table_name+` (login, password) VALUES (:login, :password) RETURNING id, password`,
+		`INSERT INTO `+databases.Users_table_name+` (login, password) VALUES (:login, :password) RETURNING id`,
 		user,
 	)
 
 	if err == nil {
 		var insertID int
-		var insertPasswordHash string
 		rows.Next()
-		rows.Scan(&insertID, &insertPasswordHash)
+		rows.Scan(&insertID)
 
 		user.Id.Scan(insertID)
-		user.Password = insertPasswordHash
 	}
 
 	return user, err
