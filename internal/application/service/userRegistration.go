@@ -38,6 +38,8 @@ func (service UserRegistration) Register(user domain.User) (domain.User, error) 
 		return user, errors.New("user already exists") // @ToDo create custom error
 	}
 
+	user.Password = service.generatePasswordHash(user.Password)
+
 	return service.userRepository.CreateUser(user)
 }
 
