@@ -1,9 +1,15 @@
 package service
 
 import (
+	"crypto/sha1"
 	"errors"
+	"fmt"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/application/repository"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain"
+	"github.com/golang-jwt/jwt"
+	"time"
+)
+
 const (
 	salt       = "wertyuiopasdfghjkl"
 	tokenTTL   = 12 * time.Hour
@@ -12,6 +18,11 @@ const (
 
 type UserRegistration struct {
 	userRepository repository.UserRepository
+}
+
+type tokenClaims struct {
+	jwt.StandardClaims
+	UserId int `json:"user_id"`
 }
 
 func NewUserRegistrationService(userRepository repository.UserRepository) *UserRegistration {
