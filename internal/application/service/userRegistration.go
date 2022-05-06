@@ -23,7 +23,7 @@ type UserRegistration struct {
 
 type tokenClaims struct {
 	jwt.StandardClaims
-	UserId int `json:"user_id"`
+	UserID int `json:"user_id"`
 }
 
 func NewUserRegistrationService(userRepository repository.UserRepository) *UserRegistration {
@@ -85,7 +85,7 @@ func (service UserRegistration) ParseToken(accessToken string) (int, error) {
 		return 0, errors.New("token claims are not of type *tokenClaims")
 	}
 
-	return claims.UserId, nil
+	return claims.UserID, nil
 }
 
 func (service UserRegistration) generatePasswordHash(password string) string {

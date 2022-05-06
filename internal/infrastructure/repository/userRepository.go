@@ -26,7 +26,7 @@ func (repository userRepository) CreateUser(user entity.User) (entity.User, erro
 		rows.Next()
 		rows.Scan(&insertID)
 
-		user.Id.Scan(insertID)
+		user.ID.Scan(insertID)
 	}
 
 	return user, err
@@ -40,7 +40,7 @@ func (repository userRepository) IsLoginExist(login string) (bool, error) {
 		login,
 	)
 
-	return user.Id.Valid, err
+	return user.ID.Valid, err
 }
 
 func (repository userRepository) GetUser(login, passwordHash string) (entity.User, error) {
