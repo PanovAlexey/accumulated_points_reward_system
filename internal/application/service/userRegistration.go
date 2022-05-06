@@ -4,6 +4,7 @@ import (
 	"crypto/sha1"
 	"errors"
 	"fmt"
+	applicationErrors "github.com/PanovAlexey/accumulated_points_reward_system/internal/application/errors"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/application/repository"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain"
 	"github.com/golang-jwt/jwt"
@@ -35,7 +36,7 @@ func (service UserRegistration) Register(user domain.User) (domain.User, error) 
 	isLoginExist, _ := service.userRepository.IsLoginExist(user.Login)
 
 	if isLoginExist {
-		return user, errors.New("user already exists") // @ToDo create custom error
+		return user, fmt.Errorf("%v: %w", user.Login, applicationErrors.ErrorAlreadyExists)
 	}
 
 	user.Password = service.generatePasswordHash(user.Password)

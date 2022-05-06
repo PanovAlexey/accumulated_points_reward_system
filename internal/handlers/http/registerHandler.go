@@ -1,6 +1,8 @@
 package http
 
 import (
+	"errors"
+	applicationErrors "github.com/PanovAlexey/accumulated_points_reward_system/internal/application/errors"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/handlers/http/responses"
 	"github.com/gin-gonic/gin"
@@ -19,6 +21,11 @@ func (h *httpHandler) register(c *gin.Context) {
 	_, err := h.userRegistrationService.Register(user)
 
 	if err != nil {
+		if errors.Is(err, applicationErrors.ErrorAlreadyExists) {
+			responses.NewErrorResponse(c, http.StatusConflict, err.Error())
+			return
+		}
+
 		responses.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
