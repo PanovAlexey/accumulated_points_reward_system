@@ -44,7 +44,7 @@ func (repository userRepository) IsLoginExist(login string) (bool, error) {
 }
 
 func (repository userRepository) GetUser(login, passwordHash string) (entity.User, error) {
-	user := entity.User{}
+	var user entity.User
 	err := repository.db.Get(
 		&user,
 		"SELECT * FROM "+databases.Users_table_name+" WHERE login = $1 and password = $2 LIMIT 1",
