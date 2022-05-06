@@ -45,22 +45,22 @@ func (service UserRegistration) Register(user entity.User) (entity.User, error) 
 }
 
 func (service UserRegistration) Auth(login, password string) (entity.User, error) {
-	//@ToDo
-	return entity.User{}, nil
-}
-
-func (service UserRegistration) GenerateToken(login, password string) (string, error) {
 	user, err := service.userRepository.GetUser(login, service.generatePasswordHash(password))
+
 	if err != nil {
-		return "", err
+		return user, err
 	}
 
+	return user, nil
+}
+
+func (service UserRegistration) GenerateToken(userID int) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(tokenTTL).Unix(),
 			IssuedAt:  time.Now().Unix(),
 		},
-		int(user.Id.Int64),
+		userID,
 	})
 
 	return token.SignedString([]byte(signingKey))
