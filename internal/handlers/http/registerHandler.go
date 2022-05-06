@@ -3,14 +3,14 @@ package http
 import (
 	"errors"
 	applicationErrors "github.com/PanovAlexey/accumulated_points_reward_system/internal/application/errors"
-	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain"
+	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain/entity"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/handlers/http/responses"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 func (h *httpHandler) register(c *gin.Context) {
-	var user domain.User
+	var user entity.User
 
 	if err := c.BindJSON(&user); err != nil {
 		responses.NewErrorResponse(c, http.StatusBadRequest, err.Error())

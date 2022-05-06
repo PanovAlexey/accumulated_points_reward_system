@@ -2,7 +2,7 @@ package repository
 
 import (
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/application/repository"
-	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain"
+	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain/entity"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/infrastructure/databases"
 	"github.com/jmoiron/sqlx"
 )
@@ -15,7 +15,7 @@ func NewUserRepository(db *sqlx.DB) repository.UserRepository {
 	return userRepository{db: db}
 }
 
-func (repository userRepository) CreateUser(user domain.User) (domain.User, error) {
+func (repository userRepository) CreateUser(user entity.User) (entity.User, error) {
 	rows, err := repository.db.NamedQuery(
 		`INSERT INTO `+databases.Users_table_name+` (login, password) VALUES (:login, :password) RETURNING id`,
 		user,
@@ -33,7 +33,7 @@ func (repository userRepository) CreateUser(user domain.User) (domain.User, erro
 }
 
 func (repository userRepository) IsLoginExist(login string) (bool, error) {
-	user := domain.User{}
+	user := entity.User{}
 	err := repository.db.Get(
 		&user,
 		"SELECT * FROM "+databases.Users_table_name+" WHERE login = $1 LIMIT 1",
@@ -43,8 +43,8 @@ func (repository userRepository) IsLoginExist(login string) (bool, error) {
 	return user.Id.Valid, err
 }
 
-func (repository userRepository) GetUser(login, passwordHash string) (domain.User, error) {
-	user := domain.User{}
+func (repository userRepository) GetUser(login, passwordHash string) (entity.User, error) {
+	user := entity.User{}
 	err := repository.db.Get(
 		&user,
 		"SELECT * FROM "+databases.Users_table_name+" WHERE login = $1 and password = $2 LIMIT 1",

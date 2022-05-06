@@ -6,7 +6,7 @@ import (
 	"fmt"
 	applicationErrors "github.com/PanovAlexey/accumulated_points_reward_system/internal/application/errors"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/application/repository"
-	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain"
+	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain/entity"
 	"github.com/golang-jwt/jwt"
 	"time"
 )
@@ -32,7 +32,7 @@ func NewUserRegistrationService(userRepository repository.UserRepository) *UserR
 	}
 }
 
-func (service UserRegistration) Register(user domain.User) (domain.User, error) {
+func (service UserRegistration) Register(user entity.User) (entity.User, error) {
 	isLoginExist, _ := service.userRepository.IsLoginExist(user.Login)
 
 	if isLoginExist {
@@ -44,9 +44,9 @@ func (service UserRegistration) Register(user domain.User) (domain.User, error) 
 	return service.userRepository.CreateUser(user)
 }
 
-func (service UserRegistration) Auth(login, password string) (domain.User, error) {
+func (service UserRegistration) Auth(login, password string) (entity.User, error) {
 	//@ToDo
-	return domain.User{}, nil
+	return entity.User{}, nil
 }
 
 func (service UserRegistration) GenerateToken(login, password string) (string, error) {
