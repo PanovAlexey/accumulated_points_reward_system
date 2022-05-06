@@ -18,7 +18,7 @@ func (h *httpHandler) register(c *gin.Context) {
 		return
 	}
 
-	_, err := h.userRegistrationService.Register(user)
+	registeredUser, err := h.userRegistrationService.Register(user)
 
 	if err != nil {
 		if errors.Is(err, applicationErrors.ErrorAlreadyExists) {
@@ -30,7 +30,7 @@ func (h *httpHandler) register(c *gin.Context) {
 		return
 	}
 
-	token, err := h.userRegistrationService.GenerateToken(user.Login, user.Password)
+	token, err := h.userRegistrationService.GenerateToken(int(registeredUser.Id.Int64))
 
 	c.Header("Authorization", token)
 	c.JSON(http.StatusOK, map[string]interface{}{
