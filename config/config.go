@@ -59,7 +59,7 @@ func initConfigByEnv(c Config) Config {
 	c.application.isDebug = getEnv("IS_DEBUG", "false") == "true"
 	c.application.environment = getEnv("ENVIRONMENT", "dev")
 	c.application.loggerDsn = getEnv("LOGGER_DSN", "https://1e8c898aac7c45259639d9a6eae5a926@o1210124.ingest.sentry.io/6345772")
-	c.storage.databaseDsn = getEnv("DATABASE_DSN", "")
+	c.storage.databaseDsn = getEnv("DATABASE_URI", "")
 
 	return c
 }
@@ -71,11 +71,16 @@ func initConfigByFlag(config Config) Config {
 	}
 
 	serverAddress := flag.String("a", "", "RUN_ADDRESS")
+	databaseURI := flag.String("d", "", "DATABASE_URI")
 
 	flag.Parse()
 
 	if len(*serverAddress) > 0 {
 		config.server.address = *serverAddress
+	}
+
+	if len(*databaseURI) > 0 {
+		config.storage.databaseDsn = *databaseURI
 	}
 
 	return config
