@@ -20,6 +20,10 @@ func main() {
 	defer logger.Close()
 
 	db := getDatabaseConnector(logger, config)
+	defer db.Close()
+
+	migrationService := databases.GetMigrationService(db)
+	migrationService.MigrateUp()
 
 	userRegistrationRepository := repository.NewUserRepository(db)
 	userRegistrationService := service.NewUserRegistrationService(userRegistrationRepository)
