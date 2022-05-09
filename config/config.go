@@ -58,7 +58,7 @@ func initConfigByEnv(c Config) Config {
 	c.server.address = getEnv("RUN_ADDRESS", "0.0.0.0:8080")
 	c.application.isDebug = getEnv("IS_DEBUG", "false") == "true"
 	c.application.environment = getEnv("ENVIRONMENT", "dev")
-	c.application.loggerDsn = getEnv("LOGGER_DSN", "")
+	c.application.loggerDsn = getEnv("LOGGER_DSN", "https://1e8c898aac7c45259639d9a6eae5a926@o1210124.ingest.sentry.io/6345772")
 	c.storage.databaseDsn = getEnv("DATABASE_DSN", "")
 
 	return c
