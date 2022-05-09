@@ -12,6 +12,8 @@ func (h *httpHandler) login(c *gin.Context) {
 
 	if err := c.BindJSON(&userAuth); err != nil {
 		responses.NewErrorResponse(c, http.StatusBadRequest, err.Error())
+		h.logger.Warn(err.Error())
+
 		return
 	}
 
@@ -19,15 +21,21 @@ func (h *httpHandler) login(c *gin.Context) {
 
 	if err != nil {
 		responses.NewErrorResponse(c, http.StatusUnauthorized, err.Error())
+		h.logger.Warn(err.Error())
+
 		return
 	}
 
-	token, err := h.userRegistrationService.GenerateToken(int(user.Id.Int64))
+	token, err := h.userRegistrationService.GenerateToken(int(user.ID.Int64))
 
 	if err != nil {
 		responses.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		h.logger.Error(err.Error())
+
 		return
 	}
+
+	h.logger.Info("User has successfully logged in. ", token, user.ID.Int64)
 
 	c.Header("Authorization", token)
 	c.JSON(http.StatusOK, map[string]interface{}{

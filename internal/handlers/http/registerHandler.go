@@ -14,7 +14,7 @@ func (h *httpHandler) register(c *gin.Context) {
 
 	if err := c.BindJSON(&user); err != nil {
 		responses.NewErrorResponse(c, http.StatusBadRequest, err.Error())
-		h.logger.Error(err.Error())
+		h.logger.Warn(err.Error())
 		return
 	}
 
@@ -23,14 +23,26 @@ func (h *httpHandler) register(c *gin.Context) {
 	if err != nil {
 		if errors.Is(err, applicationErrors.ErrorAlreadyExists) {
 			responses.NewErrorResponse(c, http.StatusConflict, err.Error())
+			h.logger.Warn(err.Error())
+
 			return
 		}
 
 		responses.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		h.logger.Error(err.Error())
+
 		return
 	}
 
-	token, err := h.userRegistrationService.GenerateToken(int(registeredUser.Id.Int64))
+	token, err := h.userRegistrationService.GenerateToken(int(registeredUser.ID.Int64))
+
+	if err := c.BindJSON(&user); err != nil {
+		responses.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		h.logger.Error(err.Error())
+		return
+	}
+
+	h.logger.Info("User has successfully registered.", token, user.ID.Int64)
 
 	c.Header("Authorization", token)
 	c.JSON(http.StatusOK, map[string]interface{}{
