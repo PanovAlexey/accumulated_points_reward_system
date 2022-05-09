@@ -36,10 +36,9 @@ func (h *httpHandler) register(c *gin.Context) {
 
 	token, err := h.userRegistrationService.GenerateToken(int(registeredUser.ID.Int64))
 
-	if err := c.BindJSON(&user); err != nil {
+	if err != nil {
 		responses.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		h.logger.Error(err.Error())
-		return
+		h.logger.Warn(err.Error())
 	}
 
 	h.logger.Info("User has successfully registered.", token, user.ID.Int64)
