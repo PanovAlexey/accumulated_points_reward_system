@@ -5,7 +5,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-const Users_table_name = "users"
+const UsersTableNameConst = "users"
 
 func NewPostgresDB(databaseDsn string) (*sqlx.DB, error) {
 	db, err := sqlx.Open("postgres", databaseDsn)
