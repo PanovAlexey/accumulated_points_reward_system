@@ -17,7 +17,7 @@ func NewUserRepository(db *sqlx.DB) repository.UserRepository {
 
 func (repository userRepository) CreateUser(user entity.User) (entity.User, error) {
 	rows, err := repository.db.NamedQuery(
-		`INSERT INTO `+databases.Users_table_name+` (login, password) VALUES (:login, :password) RETURNING id`,
+		`INSERT INTO `+databases.UsersTableNameConst+` (login, password) VALUES (:login, :password) RETURNING id`,
 		user,
 	)
 
@@ -36,7 +36,7 @@ func (repository userRepository) IsLoginExist(login string) (bool, error) {
 	user := entity.User{}
 	err := repository.db.Get(
 		&user,
-		"SELECT * FROM "+databases.Users_table_name+" WHERE login = $1 LIMIT 1",
+		"SELECT * FROM "+databases.UsersTableNameConst+" WHERE login = $1 LIMIT 1",
 		login,
 	)
 
@@ -47,7 +47,7 @@ func (repository userRepository) GetUser(login, passwordHash string) (entity.Use
 	var user entity.User
 	err := repository.db.Get(
 		&user,
-		"SELECT * FROM "+databases.Users_table_name+" WHERE login = $1 and password = $2 LIMIT 1",
+		"SELECT * FROM "+databases.UsersTableNameConst+" WHERE login = $1 and password = $2 LIMIT 1",
 		login,
 		passwordHash,
 	)
