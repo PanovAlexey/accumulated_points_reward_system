@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/application/repository"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain/entity"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/infrastructure/databases"
@@ -27,6 +28,14 @@ func (repository userRepository) CreateUser(user entity.User) (entity.User, erro
 		rows.Scan(&insertID)
 
 		user.ID.Scan(insertID)
+
+		if rows.Err() != nil {
+			err = rows.Err()
+		}
+	} else {
+		if rows.Err() != nil {
+			err = errors.New(err.Error() + rows.Err().Error())
+		}
 	}
 
 	return user, err
