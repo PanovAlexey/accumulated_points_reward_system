@@ -7,11 +7,12 @@ import (
 
 func JSON() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		c.Writer.Header().Set("Content-Type", "application/json")
+
 		if c.Request.Header.Get("Content-Type") != "application/json" {
-			http.Error(c.Writer, "Invalid Content-Type", http.StatusBadRequest)
+			c.JSON(http.StatusBadRequest, "Invalid Content-Type")
+			c.Abort()
 			return
 		}
-
-		c.Writer.Header().Set("Content-Type", "application/json")
 	}
 }
