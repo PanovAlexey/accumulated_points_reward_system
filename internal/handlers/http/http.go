@@ -10,12 +10,18 @@ import (
 type httpHandler struct {
 	logger                  logging.LoggerInterface
 	userRegistrationService *service.UserRegistration
+	orderLoaderService      *service.OrderLoader
 }
 
-func NewHandler(logger logging.LoggerInterface, userRegistrationService *service.UserRegistration) *httpHandler {
+func NewHandler(
+	logger logging.LoggerInterface,
+	userRegistrationService *service.UserRegistration,
+	orderLoaderService *service.OrderLoader,
+) *httpHandler {
 	return &httpHandler{
 		logger:                  logger,
 		userRegistrationService: userRegistrationService,
+		orderLoaderService:      orderLoaderService,
 	}
 }
 
