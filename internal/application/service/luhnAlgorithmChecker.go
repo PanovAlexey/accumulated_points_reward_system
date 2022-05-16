@@ -1,14 +1,20 @@
 package service
 
+import "errors"
+
 type luhnAlgorithmChecker struct {
 }
 
-func (checker luhnAlgorithmChecker) GetLuhnAlgorithmChecker() luhnAlgorithmChecker {
+func GetLuhnAlgorithmChecker() luhnAlgorithmChecker {
 	return luhnAlgorithmChecker{}
 }
 
-func (checker luhnAlgorithmChecker) Valid(number int) bool {
-	return (number%10+checksum(number/10))%10 == 0
+func (checker luhnAlgorithmChecker) Validate(number int) error {
+	if (number%10+checksum(number/10))%10 != 0 {
+		return errors.New("the number does not satisfy Luhn's algorithm")
+	}
+
+	return nil
 }
 
 func checksum(number int) int {
