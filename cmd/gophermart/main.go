@@ -28,7 +28,10 @@ func main() {
 	userRegistrationRepository := repository.NewUserRepository(db)
 	userRegistrationService := service.NewUserRegistrationService(userRegistrationRepository)
 
-	handler := http.NewHandler(logger, userRegistrationService)
+	orderNumberValidator := service.GetLuhnAlgorithmChecker()
+	orderLoaderService := service.NewOrderLoaderService(orderNumberValidator)
+
+	handler := http.NewHandler(logger, userRegistrationService, orderLoaderService)
 	server := new(servers.Server)
 
 	if err := server.Run(config, handler.InitRoutes()); err != nil {
