@@ -19,8 +19,17 @@ func (h *httpHandler) addOrder(c *gin.Context) {
 		return
 	}
 
+	userCtxValue, isExist := c.Get(h.userRegistrationService.GetUserCtx())
+
+	if isExist == false {
+		responses.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		h.logger.Error("it is no info about user in context. " + err.Error())
+
+		return
+	}
+
 	orderNumber := string(body)
-	order, err := h.orderLoaderService.PostOrder(orderNumber)
+	order, err := h.orderLoaderService.PostOrder(orderNumber, userCtxValue)
 
 	if errors.Is(err, applicationErrors.ErrorOrderNumberInvalid) {
 		responses.NewErrorResponse(c, http.StatusUnprocessableEntity, err.Error())

@@ -8,11 +8,11 @@ import (
 
 const (
 	authorizationHeader = "Authorization"
-	userCtx             = "userId"
 )
 
 type TokenParsing interface {
 	ParseToken(accessToken string) (int, error)
+	GetUserCtx() string
 }
 
 func Authorization(tokenParserService TokenParsing) gin.HandlerFunc {
@@ -47,6 +47,6 @@ func Authorization(tokenParserService TokenParsing) gin.HandlerFunc {
 			return
 		}
 
-		c.Set(userCtx, userId)
+		c.Set(tokenParserService.GetUserCtx(), userId)
 	}
 }
