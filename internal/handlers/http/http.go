@@ -38,6 +38,7 @@ func (h *httpHandler) InitRoutes() *gin.Engine {
 			user.POST("/register", h.register)
 			user.POST("/login", h.login)
 
+			user.Use(middleware.Authorization(h.userRegistrationService))
 			user.POST("/orders", h.addOrder)
 			user.GET("/orders", h.getOrders)
 		}
