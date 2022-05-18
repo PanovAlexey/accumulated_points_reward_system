@@ -25,16 +25,19 @@ func (h *httpHandler) addOrder(c *gin.Context) {
 	if errors.Is(err, applicationErrors.ErrorOrderNumberInvalid) {
 		responses.NewErrorResponse(c, http.StatusUnprocessableEntity, err.Error())
 		h.logger.Warn(err.Error())
+		return
 	}
 
 	if errors.Is(err, applicationErrors.ErrorOrderAlreadySent) {
 		responses.NewErrorResponse(c, http.StatusOK, err.Error())
 		h.logger.Warn(err.Error(), orderNumber)
+		return
 	}
 
 	if errors.Is(err, applicationErrors.ErrorOrderAlreadyExists) {
 		responses.NewErrorResponse(c, http.StatusConflict, err.Error())
 		h.logger.Warn(err.Error(), orderNumber)
+		return
 	}
 
 	c.JSON(http.StatusAccepted, map[string]interface{}{
