@@ -63,7 +63,9 @@ func (service UserRegistration) GenerateToken(userID int) (string, error) {
 		userID,
 	})
 
-	return token.SignedString([]byte(signingKey))
+	signedString, err := token.SignedString([]byte(signingKey))
+
+	return "Bearer " + signedString, err
 }
 
 func (service UserRegistration) ParseToken(accessToken string) (int, error) {
