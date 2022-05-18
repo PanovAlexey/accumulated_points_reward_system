@@ -28,6 +28,7 @@ func NewHandler(
 func (h *httpHandler) InitRoutes() *gin.Engine {
 	router := gin.New()
 
+	router.Use(gin.Recovery())
 	router.GET("/ping", h.HandlePing)
 
 	api := router.Group("/api")
