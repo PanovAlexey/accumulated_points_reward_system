@@ -12,6 +12,7 @@ import (
 )
 
 const (
+	userCtx    = "userId"
 	salt       = "wertyuiopasdfghjkl"
 	tokenTTL   = 12 * time.Hour
 	signingKey = "qweqr78939870424&(#$@"
@@ -30,6 +31,10 @@ func NewUserRegistrationService(userRepository repository.UserRepository) *UserR
 	return &UserRegistration{
 		userRepository: userRepository,
 	}
+}
+
+func (service UserRegistration) GetUserCtx() string {
+	return userCtx
 }
 
 func (service UserRegistration) Register(user entity.User) (entity.User, error) {
