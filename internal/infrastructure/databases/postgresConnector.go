@@ -6,6 +6,7 @@ import (
 )
 
 const UsersTableNameConst = "users"
+const OrdersTableNameConst = "orders"
 
 func NewPostgresDB(databaseDsn string) (*sqlx.DB, error) {
 	db, err := sqlx.Open("postgres", databaseDsn)
