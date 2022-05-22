@@ -29,7 +29,7 @@ func (h *httpHandler) addOrder(c *gin.Context) {
 	}
 
 	orderNumber := string(body)
-	order, err := h.orderLoaderService.PostOrder(orderNumber, userCtxValue.(int64))
+	order, err := h.orderLoaderService.PostOrder(orderNumber, int64(userCtxValue.(int)))
 
 	if errors.Is(err, applicationErrors.ErrorOrderNumberInvalid) {
 		responses.NewErrorResponse(c, http.StatusUnprocessableEntity, err.Error())
