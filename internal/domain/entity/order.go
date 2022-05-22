@@ -12,12 +12,6 @@ type Order struct {
 	UserID sql.NullInt64 `json:"user_id" db:"user_id" binding:"required"`
 }
 
-func NewOrderByNumber(number string) Order {
-	return Order{
-		Number: number,
-	}
-}
-
 func NewOrder(number int64, status int, userID int64) Order {
 	var userIDNullInt, statusIDNullInt sql.NullInt64
 	userIDNullInt.Scan(userID)
