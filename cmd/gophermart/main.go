@@ -29,7 +29,8 @@ func main() {
 	userRegistrationService := service.NewUserRegistrationService(userRegistrationRepository)
 
 	orderNumberValidator := service.GetLuhnAlgorithmChecker()
-	orderLoaderService := service.NewOrderLoaderService(orderNumberValidator)
+	orderRepository := repository.NewOrderRepository(db)
+	orderLoaderService := service.NewOrderLoaderService(orderRepository, orderNumberValidator)
 
 	handler := http.NewHandler(logger, userRegistrationService, orderLoaderService)
 	server := new(servers.Server)
