@@ -50,13 +50,7 @@ func (service UserRegistration) Register(user entity.User) (entity.User, error) 
 }
 
 func (service UserRegistration) Auth(login, password string) (entity.User, error) {
-	user, err := service.userRepository.GetUser(login, service.generatePasswordHash(password))
-
-	if err != nil {
-		return user, err
-	}
-
-	return user, nil
+	return service.userRepository.GetUser(login, service.generatePasswordHash(password))
 }
 
 func (service UserRegistration) GenerateToken(userID int) (string, error) {
