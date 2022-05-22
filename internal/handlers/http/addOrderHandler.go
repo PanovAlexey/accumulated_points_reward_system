@@ -49,6 +49,8 @@ func (h *httpHandler) addOrder(c *gin.Context) {
 		return
 	}
 
+	h.logger.Info("order successfully created "+orderNumber, order)
+
 	c.JSON(http.StatusAccepted, map[string]interface{}{
 		"order": order,
 	})
