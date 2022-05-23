@@ -11,12 +11,16 @@ import (
 type OrderLoader struct {
 	orderRepository      repository.OrderRepository
 	orderNumberValidator OrderValidator
+	statusGetter         orderStatusGetter
 }
 
-func NewOrderLoaderService(orderRepository repository.OrderRepository, validator OrderValidator) *OrderLoader {
+func NewOrderLoaderService(
+	orderRepository repository.OrderRepository, validator OrderValidator, statusGetter orderStatusGetter,
+) *OrderLoader {
 	return &OrderLoader{
 		orderRepository:      orderRepository,
 		orderNumberValidator: validator,
+		statusGetter:         statusGetter,
 	}
 }
 
@@ -42,7 +46,7 @@ func (service OrderLoader) PostOrder(number string, userID int64) (*entity.Order
 	}
 
 	if order == nil {
-		newOrder := entity.NewOrder(numberInt, 1, userID) // @ToDO change 1 to real status ID
+		newOrder := entity.NewOrder(numberInt, service.statusGetter.GetRegisteredStatusID(), userID)
 		order = &newOrder
 	} else {
 		if order.UserID.Int64 == userID {
@@ -68,7 +72,9 @@ func (service OrderLoader) GetOrderByNumber(number int64) (*entity.Order, error)
 }
 
 func (service OrderLoader) SaveOrder(number int64, userID int64) (*entity.Order, error) {
-	order, err := service.orderRepository.CreateOrder(entity.NewOrder(number, 1, userID)) // @ToDo: change 1 to real value
+	order, err := service.orderRepository.CreateOrder(
+		entity.NewOrder(number, service.statusGetter.GetRegisteredStatusID(), userID),
+	)
 
 	return &order, err
 }
