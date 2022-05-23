@@ -28,9 +28,10 @@ func main() {
 	userRegistrationRepository := repository.NewUserRepository(db)
 	userRegistrationService := service.NewUserRegistrationService(userRegistrationRepository)
 
+	orderStatusGetter := service.GetOrderStatusGetter()
 	orderNumberValidator := service.GetLuhnAlgorithmChecker()
 	orderRepository := repository.NewOrderRepository(db)
-	orderLoaderService := service.NewOrderLoaderService(orderRepository, orderNumberValidator)
+	orderLoaderService := service.NewOrderLoaderService(orderRepository, orderNumberValidator, orderStatusGetter)
 
 	handler := http.NewHandler(logger, userRegistrationService, orderLoaderService)
 	server := new(servers.Server)
