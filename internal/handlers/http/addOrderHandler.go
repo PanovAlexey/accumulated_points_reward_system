@@ -11,6 +11,7 @@ import (
 
 func (h *httpHandler) addOrder(c *gin.Context) {
 	body, err := io.ReadAll(c.Request.Body)
+	defer c.Request.Body.Close()
 
 	if err != nil {
 		responses.NewErrorResponse(c, http.StatusBadRequest, err.Error())
