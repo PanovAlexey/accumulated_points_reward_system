@@ -9,7 +9,7 @@ func GetOrderStatusGetter() orderStatusGetter {
 
 func (service orderStatusGetter) GetStatuses() map[int]string {
 	return map[int]string{
-		1: "REGISTERED",
+		1: "NEW",
 		2: "INVALID",
 		3: "PROCESSING",
 		4: "PROCESSED",
