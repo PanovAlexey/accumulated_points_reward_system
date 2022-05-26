@@ -33,15 +33,13 @@ func (h *httpHandler) InitRoutes() *gin.Engine {
 
 	api := router.Group("/api")
 	{
-		api.Use(middleware.JSON())
 		user := api.Group("/user")
 		{
-			user.POST("/register", h.register)
-			user.POST("/login", h.login)
+			user.POST("/register", middleware.RequestJSON(), middleware.ResponseJSON(), h.register)
+			user.POST("/login", middleware.RequestJSON(), middleware.ResponseJSON(), h.login)
 
-			user.Use(middleware.Authorization(h.userRegistrationService))
-			user.POST("/orders", h.addOrder)
-			user.GET("/orders", h.getOrders)
+			user.POST("/orders", middleware.Authorization(h.userRegistrationService), middleware.ResponseJSON(), h.addOrder)
+			user.GET("/orders", middleware.Authorization(h.userRegistrationService), middleware.ResponseJSON(), h.getOrders)
 		}
 	}
 
