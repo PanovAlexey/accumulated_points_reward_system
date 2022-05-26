@@ -1,16 +1,16 @@
 up:
-	cd .docker && docker-compose up --build
+	docker-compose --file .docker/docker-compose.yml up --build
 
 down:
-	cd .docker && docker-compose down
+	docker-compose --file .docker/docker-compose.yml down
 
 restart:
-	cd .docker && docker-compose restart
+	docker-compose --file .docker/docker-compose.yml restart
 
 recreate:
-	cd .docker && docker-compose down
-	cd .docker && docker-compose up -d --build --force-recreate
-	cd .docker && docker-compose up -d
+	docker-compose --file .docker/docker-compose.yml down
+	docker-compose --file .docker/docker-compose.yml up -d --build --force-recreate
+	docker-compose --file .docker/docker-compose.yml up -d
 
 logs:
 	cd .docker && docker logs reward_go
