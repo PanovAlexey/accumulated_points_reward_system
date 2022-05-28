@@ -31,3 +31,8 @@ func (service orderStatusGetter) GetProcessingStatusID() int {
 func (service orderStatusGetter) GetProcessedStatusID() int {
 	return 4
 }
+
+func (service orderStatusGetter) GetStatusNameByID(statusID int) string {
+	statuses := service.GetStatuses()
+	return statuses[statusID]
+}

@@ -78,3 +78,7 @@ func (service OrderLoader) SaveOrder(number int64, userID int64) (*entity.Order,
 
 	return &order, err
 }
+
+func (service OrderLoader) GetOrdersByUserID(userID int64) (*[]entity.Order, error) {
+	return service.orderRepository.GetOrdersByUserID(userID)
+}
