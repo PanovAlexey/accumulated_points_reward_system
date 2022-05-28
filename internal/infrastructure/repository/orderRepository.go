@@ -21,7 +21,7 @@ func (repository orderRepository) CreateOrder(order entity.Order) (entity.Order,
 	rows, err := repository.db.NamedQuery(
 		`INSERT INTO `+
 			databases.OrdersTableNameConst+
-			` (user_id, number, status) VALUES (:user_id, :number, :status) RETURNING id`,
+			` (user_id, number, status, uploaded_at) VALUES (:user_id, :number, :status, :uploaded_at) RETURNING id`,
 		order,
 	)
 
@@ -57,4 +57,20 @@ func (repository orderRepository) GetOrder(number int64) (*entity.Order, error) 
 	}
 
 	return &order, err
+}
+
+func (repository orderRepository) GetOrdersByUserID(userID int64) (*[]entity.Order, error) {
+	var orders []entity.Order
+
+	err := repository.db.Select(
+		&orders,
+		"SELECT * FROM "+databases.OrdersTableNameConst+" WHERE user_id = $1",
+		userID,
+	)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+
+	return &orders, nil
 }

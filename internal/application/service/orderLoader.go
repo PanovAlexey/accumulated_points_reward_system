@@ -24,14 +24,6 @@ func NewOrderLoaderService(
 	}
 }
 
-func (service OrderLoader) validate(numberOrder string) (int64, error) {
-	if numberOrderInt, err := strconv.ParseInt(numberOrder, 10, 64); err == nil {
-		return numberOrderInt, service.orderNumberValidator.Validate(numberOrderInt)
-	} else {
-		return 0, err
-	}
-}
-
 func (service OrderLoader) PostOrder(number string, userID int64) (*entity.Order, error) {
 	numberInt, err := service.validate(number)
 
@@ -81,4 +73,16 @@ func (service OrderLoader) SaveOrder(number int64, userID int64) (*entity.Order,
 
 func (service OrderLoader) GetOrdersByUserID(userID int64) (*[]entity.Order, error) {
 	return service.orderRepository.GetOrdersByUserID(userID)
+}
+
+func (service OrderLoader) GetStatusNameByID(id int) string {
+	return service.statusGetter.GetStatusNameByID(id)
+}
+
+func (service OrderLoader) validate(numberOrder string) (int64, error) {
+	if numberOrderInt, err := strconv.ParseInt(numberOrder, 10, 64); err == nil {
+		return numberOrderInt, service.orderNumberValidator.Validate(numberOrderInt)
+	} else {
+		return 0, err
+	}
 }
