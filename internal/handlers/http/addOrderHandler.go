@@ -23,8 +23,8 @@ func (h *httpHandler) addOrder(c *gin.Context) {
 	userCtxValue, isExist := c.Get(h.userRegistrationService.GetUserCtx())
 
 	if isExist == false {
-		responses.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
-		h.logger.Error("it is no info about user in context. " + err.Error())
+		responses.NewErrorResponse(c, http.StatusInternalServerError, "it is no info about user in context.")
+		h.logger.Error("it is no info about user in context.")
 
 		return
 	}
