@@ -42,7 +42,7 @@ func (h *httpHandler) getOrders(c *gin.Context) {
 			dto.OrderOutputDto{
 				Number:     order.Number,
 				Status:     h.orderLoaderService.GetStatusNameByID(int(order.Status.Int64)),
-				Accrual:    500,
+				Accrual:    500, // @ToDo: show real value
 				UploadedAt: time.Now().Format(time.RFC3339),
 			},
 		)
