@@ -11,17 +11,20 @@ type httpHandler struct {
 	logger                  logging.LoggerInterface
 	userRegistrationService *service.UserRegistration
 	orderLoaderService      *service.OrderLoader
+	paymentManagement       *service.PaymentsManagement
 }
 
 func NewHandler(
 	logger logging.LoggerInterface,
 	userRegistrationService *service.UserRegistration,
 	orderLoaderService *service.OrderLoader,
+	paymentManagement *service.PaymentsManagement,
 ) *httpHandler {
 	return &httpHandler{
 		logger:                  logger,
 		userRegistrationService: userRegistrationService,
 		orderLoaderService:      orderLoaderService,
+		paymentManagement:       paymentManagement,
 	}
 }
 
