@@ -33,7 +33,10 @@ func main() {
 	orderRepository := repository.NewOrderRepository(db)
 	orderLoaderService := service.NewOrderLoaderService(orderRepository, orderNumberValidator, orderStatusGetter)
 
-	handler := http.NewHandler(logger, userRegistrationService, orderLoaderService)
+	paymentRepository := repository.NewPaymentRepository(db)
+	paymentManagement := service.NewPaymentManagement(paymentRepository)
+
+	handler := http.NewHandler(logger, userRegistrationService, orderLoaderService, paymentManagement)
 	server := new(servers.Server)
 
 	if err := server.Run(config, handler.InitRoutes()); err != nil {
