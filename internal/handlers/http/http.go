@@ -43,6 +43,8 @@ func (h *httpHandler) InitRoutes() *gin.Engine {
 
 			user.POST("/orders", middleware.Authorization(h.userRegistrationService), middleware.ResponseJSON(), h.addOrder)
 			user.GET("/orders", middleware.Authorization(h.userRegistrationService), middleware.ResponseJSON(), h.getOrders)
+
+			user.GET("/balance", middleware.Authorization(h.userRegistrationService), middleware.ResponseJSON(), h.getBalance)
 		}
 	}
 
