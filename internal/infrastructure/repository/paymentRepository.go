@@ -7,6 +7,7 @@ import (
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain/entity"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/infrastructure/databases"
 	"github.com/jmoiron/sqlx"
+	"strconv"
 	"time"
 )
 
@@ -65,4 +66,33 @@ func (repository paymentRepository) Create(userID, orderID int64, sum float64) (
 	}
 
 	return payment, err
+}
+
+func (repository paymentRepository) GetOrderIDToPaymentMap(orderIDList []int64) (map[int64]entity.Payment, error) {
+	var ordersIDString string
+	orderIDToPaymentMap := make(map[int64]entity.Payment)
+
+	for i := 0; i < len(orderIDList); i++ {
+		ordersIDString = ordersIDString + " order_id = " + strconv.FormatInt(orderIDList[i], 10)
+
+		if i+1 < len(orderIDList) {
+			ordersIDString = ordersIDString + " OR"
+		}
+	}
+
+	var payments []entity.Payment
+	err := repository.db.Select(
+		&payments,
+		"SELECT id, user_id, order_id, processed_at, sum FROM "+databases.PaymentsTableNameConst+" WHERE "+ordersIDString,
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for _, payment := range payments {
+		orderIDToPaymentMap[payment.Order.Int64] = payment
+	}
+
+	return orderIDToPaymentMap, nil
 }

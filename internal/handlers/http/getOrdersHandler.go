@@ -34,17 +34,24 @@ func (h *httpHandler) getOrders(c *gin.Context) {
 		return
 	}
 
+	orderIDToPaymentMap, err := h.paymentManagement.GetOrderIDToPaymentMap(*orders)
+
 	var orderOutputs []dto.OrderOutputDto
 
 	for _, order := range *orders {
+		orderOutput := dto.OrderOutputDto{
+			Number:     order.Number,
+			Status:     h.orderLoaderService.GetStatusNameByID(int(order.Status.Int64)),
+			UploadedAt: time.Now().Format(time.RFC3339),
+		}
+
+		if orderIDToPaymentMap[order.ID.Int64].Sum > 0 {
+			orderOutput.Accrual = orderIDToPaymentMap[order.ID.Int64].Sum
+		}
+
 		orderOutputs = append(
 			orderOutputs,
-			dto.OrderOutputDto{
-				Number:     order.Number,
-				Status:     h.orderLoaderService.GetStatusNameByID(int(order.Status.Int64)),
-				Accrual:    500, // @ToDo: show real value
-				UploadedAt: time.Now().Format(time.RFC3339),
-			},
+			orderOutput,
 		)
 	}
 
