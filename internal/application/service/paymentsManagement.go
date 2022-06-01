@@ -33,6 +33,9 @@ func (service PaymentsManagement) GetOrderIDToPaymentMap(orders []entity.Order) 
 	return service.paymentRepository.GetOrderIDToPaymentMap(orderIDList)
 }
 
+func (service PaymentsManagement) GetUserBalance(userID int64) (float64, error) {
+	return service.paymentRepository.GetBalance(userID)
+}
 
 func (service PaymentsManagement) GetTotalWithdrawn(userID int64) (float64, error) {
 	return service.paymentRepository.GetTotalWithdrawn(userID)

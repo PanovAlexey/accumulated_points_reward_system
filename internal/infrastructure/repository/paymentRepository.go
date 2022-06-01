@@ -28,6 +28,10 @@ func (repository paymentRepository) GetBalance(userID int64) (float64, error) {
 	).Scan(&balance)
 
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return 0, nil
+		}
+
 		return 0, err
 	}
 
@@ -95,4 +99,23 @@ func (repository paymentRepository) GetOrderIDToPaymentMap(orderIDList []int64) 
 	}
 
 	return orderIDToPaymentMap, nil
+}
+
+func (repository paymentRepository) GetTotalWithdrawn(userID int64) (float64, error) {
+	var balance sql.NullFloat64
+
+	err := repository.db.QueryRow(
+		"SELECT SUM(sum) FROM "+databases.PaymentsTableNameConst+" WHERE sum < 0 AND user_id = ($1) GROUP BY user_id",
+		userID,
+	).Scan(&balance)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return 0, nil
+		}
+
+		return 0, err
+	}
+
+	return balance.Float64, nil
 }
