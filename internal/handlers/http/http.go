@@ -45,6 +45,7 @@ func (h *httpHandler) InitRoutes() *gin.Engine {
 			user.GET("/orders", middleware.Authorization(h.userRegistrationService), middleware.ResponseJSON(), h.getOrders)
 
 			user.GET("/balance", middleware.Authorization(h.userRegistrationService), middleware.ResponseJSON(), h.getBalance)
+			user.GET("/balance/withdrawals", middleware.Authorization(h.userRegistrationService), middleware.ResponseJSON(), h.getWithdrawals)
 		}
 	}
 
