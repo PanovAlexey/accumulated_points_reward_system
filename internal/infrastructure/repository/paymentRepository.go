@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/application/repository"
+	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain/dto"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain/entity"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/infrastructure/databases"
 	"github.com/jmoiron/sqlx"
@@ -118,4 +119,27 @@ func (repository paymentRepository) GetTotalWithdrawn(userID int64) (float64, er
 	}
 
 	return balance.Float64, nil
+}
+
+func (repository paymentRepository) GetWithdrawnPayments(userID int64) ([]dto.WithdrawalsOutputDto, error) {
+	var withdrawals []dto.WithdrawalsOutputDto
+
+	err := repository.db.Select(
+		&withdrawals,
+		"SELECT sum, order_id, processed_at FROM "+
+			databases.PaymentsTableNameConst+
+			" WHERE sum < 0 AND user_id = ($1)"+
+			" ORDER BY ID DESC",
+		userID,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+
+	return withdrawals, nil
 }
