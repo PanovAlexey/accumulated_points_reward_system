@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/application/repository"
+	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain/dto"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain/entity"
 )
 
@@ -39,4 +40,8 @@ func (service PaymentsManagement) GetUserBalance(userID int64) (float64, error) 
 
 func (service PaymentsManagement) GetTotalWithdrawn(userID int64) (float64, error) {
 	return service.paymentRepository.GetTotalWithdrawn(userID)
+}
+
+func (service PaymentsManagement) GetWithdrawals(userID int64) ([]dto.WithdrawalsOutputDto, error) {
+	return service.paymentRepository.GetWithdrawnPayments(userID)
 }
