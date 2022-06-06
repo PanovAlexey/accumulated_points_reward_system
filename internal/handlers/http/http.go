@@ -46,6 +46,7 @@ func (h *httpHandler) InitRoutes() *gin.Engine {
 
 			user.GET("/balance", middleware.Authorization(h.userRegistrationService), middleware.ResponseJSON(), h.getBalance)
 			user.GET("/balance/withdrawals", middleware.Authorization(h.userRegistrationService), middleware.ResponseJSON(), h.getWithdrawals)
+			user.POST("/balance/withdraw", middleware.Authorization(h.userRegistrationService), middleware.RequestJSON(), middleware.ResponseJSON(), h.postWithdraw)
 		}
 	}
 
