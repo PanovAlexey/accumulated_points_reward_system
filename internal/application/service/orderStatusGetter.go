@@ -36,3 +36,7 @@ func (service orderStatusGetter) GetStatusNameByID(statusID int) string {
 	statuses := service.GetStatuses()
 	return statuses[statusID]
 }
+
+func (service orderStatusGetter) GetUnfinishedStatusesID() []int {
+	return []int{service.GetRegisteredStatusID(), service.GetProcessingStatusID()}
+}
