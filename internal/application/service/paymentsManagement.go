@@ -21,6 +21,10 @@ func (service PaymentsManagement) Debt(order entity.Order, sum float64) (entity.
 }
 
 func (service PaymentsManagement) Credit(order entity.Order, sum float64) (entity.Payment, error) {
+	if sum > 0 {
+		sum = sum * (-1)
+	}
+
 	return service.paymentRepository.Create(order.UserID.Int64, order.ID.Int64, sum)
 }
 
