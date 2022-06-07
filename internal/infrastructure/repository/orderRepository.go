@@ -85,3 +85,18 @@ func (repository orderRepository) SetOrderStatusID(orderID int64, statusID int) 
 
 	return err
 }
+
+func (repository orderRepository) GetOrdersByStatusesID(statusesID []int) (*[]entity.Order, error) {
+	var orders []entity.Order
+
+	err := repository.db.Select(
+		&orders,
+		"SELECT * FROM "+databases.OrdersTableNameConst+" WHERE status = 1 OR status = 3", // @ToDo replace hardcode numbers
+	)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+
+	return &orders, nil
+}
