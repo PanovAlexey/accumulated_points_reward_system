@@ -79,6 +79,22 @@ func (service OrderLoader) GetStatusNameByID(id int) string {
 	return service.statusGetter.GetStatusNameByID(id)
 }
 
+func (service OrderLoader) SetNewStatus(order entity.Order) error {
+	return service.orderRepository.SetOrderStatusID(order.ID.Int64, service.statusGetter.GetRegisteredStatusID())
+}
+
+func (service OrderLoader) SetInvalidStatus(order entity.Order) error {
+	return service.orderRepository.SetOrderStatusID(order.ID.Int64, service.statusGetter.GetInvalidStatusID())
+}
+
+func (service OrderLoader) SetProcessingStatus(order entity.Order) error {
+	return service.orderRepository.SetOrderStatusID(order.ID.Int64, service.statusGetter.GetProcessingStatusID())
+}
+
+func (service OrderLoader) SetProcessedStatus(order entity.Order) error {
+	return service.orderRepository.SetOrderStatusID(order.ID.Int64, service.statusGetter.GetProcessedStatusID())
+}
+
 func (service OrderLoader) validate(numberOrder string) (int64, error) {
 	if numberOrderInt, err := strconv.ParseInt(numberOrder, 10, 64); err == nil {
 		return numberOrderInt, service.orderNumberValidator.Validate(numberOrderInt)
