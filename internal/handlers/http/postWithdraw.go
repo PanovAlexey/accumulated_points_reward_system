@@ -2,11 +2,13 @@ package http
 
 import (
 	"errors"
+	"fmt"
 	applicationErrors "github.com/PanovAlexey/accumulated_points_reward_system/internal/application/errors"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain/dto"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/handlers/http/responses"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 func (h *httpHandler) postWithdraw(c *gin.Context) {
@@ -24,6 +26,31 @@ func (h *httpHandler) postWithdraw(c *gin.Context) {
 	if err := c.BindJSON(&orderInputDto); err != nil {
 		responses.NewErrorResponse(c, http.StatusUnprocessableEntity, err.Error())
 		h.logger.Warn(err.Error())
+		return
+	}
+
+	currentBalance, err := h.paymentManagement.GetUserBalance(int64(userCtxValue.(int)))
+
+	if err != nil {
+		errorMessage := "error getting balance for user " + strconv.Itoa(userCtxValue.(int))
+		responses.NewErrorResponse(
+			c,
+			http.StatusInternalServerError,
+			errorMessage,
+		)
+		h.logger.Error(errorMessage)
+		return
+	}
+
+	if currentBalance < orderInputDto.Sum {
+		errorMessage := "Error: user " +
+			strconv.Itoa(userCtxValue.(int)) +
+			" not enough money. It is impossible to withdraw " +
+			fmt.Sprintf("%.2f", orderInputDto.Sum) +
+			". The balance is " + fmt.Sprintf("%.2f", currentBalance) + "."
+
+		responses.NewErrorResponse(c, http.StatusPaymentRequired, errorMessage)
+		h.logger.Warn(errorMessage)
 		return
 	}
 
