@@ -9,4 +9,5 @@ type OrderRepository interface {
 	GetOrder(number int64) (*entity.Order, error)
 	GetOrdersByUserID(userID int64) (*[]entity.Order, error)
 	SetOrderStatusID(orderID int64, statusID int) error
+	GetOrdersByStatusesID([]int) (*[]entity.Order, error)
 }
