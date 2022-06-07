@@ -2,11 +2,13 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain/dto"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain/entity"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/infrastructure/logging"
 	"io"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -95,7 +97,16 @@ func (service SynchronizationWithScoringSystemService) handleOrderByStatusInScor
 		service.orderService.SetProcessedStatus(order)
 
 		if response.Accrual > 0 {
-			service.paymentsManagement.Debt(order, response.Accrual)
+			payment, err := service.paymentsManagement.Debt(order, response.Accrual)
+
+			if err != nil {
+				service.logger.Error("error when trying to accrue bonus points " + err.Error())
+			} else {
+				service.logger.Info("user " +
+					strconv.FormatInt(order.UserID.Int64, 10) +
+					" is credited with " + fmt.Sprintf("%.2f", payment.Sum) + " points .",
+				)
+			}
 		}
 	}
 }

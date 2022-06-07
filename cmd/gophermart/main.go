@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/PanovAlexey/accumulated_points_reward_system/config"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/application/service"
-	"github.com/PanovAlexey/accumulated_points_reward_system/internal/handlers/http"
+	httpProject "github.com/PanovAlexey/accumulated_points_reward_system/internal/handlers/http"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/infrastructure/databases"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/infrastructure/logging"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/infrastructure/repository"
@@ -36,7 +36,12 @@ func main() {
 	paymentRepository := repository.NewPaymentRepository(db)
 	paymentManagement := service.NewPaymentManagement(paymentRepository)
 
-	handler := http.NewHandler(logger, userRegistrationService, orderLoaderService, paymentManagement)
+	synchronizationWithScoringSystemService := service.NewSynchronizationWithScoringSystemService(
+		*orderLoaderService, *paymentManagement, logger
+	)
+	go synchronizationWithScoringSystemService.Init()
+
+	handler := httpProject.NewHandler(logger, userRegistrationService, orderLoaderService, paymentManagement)
 	server := new(servers.Server)
 
 	if err := server.Run(config, handler.InitRoutes()); err != nil {
