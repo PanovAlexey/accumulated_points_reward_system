@@ -7,6 +7,7 @@ import (
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain/entity"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/infrastructure/databases"
 	"github.com/jmoiron/sqlx"
+	"strconv"
 )
 
 type orderRepository struct {
@@ -73,4 +74,14 @@ func (repository orderRepository) GetOrdersByUserID(userID int64) (*[]entity.Ord
 	}
 
 	return &orders, nil
+}
+
+func (repository orderRepository) SetOrderStatusID(orderID int64, statusID int) error {
+	_, err := repository.db.Exec(
+		"UPDATE " + databases.OrdersTableNameConst +
+			" SET status=" + strconv.Itoa(statusID) +
+			" WHERE id=" + strconv.FormatInt(orderID, 10),
+	)
+
+	return err
 }
