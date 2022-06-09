@@ -20,10 +20,15 @@ type applicationConfig struct {
 	isDebug     bool
 }
 
+type externalSystemsConfig struct {
+	accrualSystemAddress string
+}
+
 type Config struct {
-	server      serverConfig
-	application applicationConfig
-	storage     storageConfig
+	server          serverConfig
+	application     applicationConfig
+	storage         storageConfig
+	externalSystems externalSystemsConfig
 }
 
 func NewConfig() Config {
@@ -54,12 +59,17 @@ func (c Config) GetDatabaseDsn() string {
 	return c.storage.databaseDsn
 }
 
+func (c Config) GetAccrualSystemAddress() string {
+	return c.externalSystems.accrualSystemAddress
+}
+
 func initConfigByEnv(c Config) Config {
 	c.server.address = getEnv("RUN_ADDRESS", "0.0.0.0:8080")
 	c.application.isDebug = getEnv("IS_DEBUG", "false") == "true"
 	c.application.environment = getEnv("ENVIRONMENT", "dev")
 	c.application.loggerDsn = getEnv("LOGGER_DSN", "https://1e8c898aac7c45259639d9a6eae5a926@o1210124.ingest.sentry.io/6345772")
 	c.storage.databaseDsn = getEnv("DATABASE_URI", "")
+	c.externalSystems.accrualSystemAddress = getEnv("ACCRUAL_SYSTEM_ADDRESS", "http://localhost:8080/api/orders/")
 
 	return c
 }
@@ -72,6 +82,7 @@ func initConfigByFlag(config Config) Config {
 
 	serverAddress := flag.String("a", "", "RUN_ADDRESS")
 	databaseURI := flag.String("d", "", "DATABASE_URI")
+	accrualSystemAddress := flag.String("r", "", "ACCRUAL_SYSTEM_ADDRESS")
 
 	flag.Parse()
 
@@ -81,6 +92,10 @@ func initConfigByFlag(config Config) Config {
 
 	if len(*databaseURI) > 0 {
 		config.storage.databaseDsn = *databaseURI
+	}
+
+	if len(*accrualSystemAddress) > 0 {
+		config.externalSystems.accrualSystemAddress = *accrualSystemAddress
 	}
 
 	return config

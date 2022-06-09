@@ -15,20 +15,23 @@ import (
 const orderProcessingFrequencyInterval = 10 * time.Second
 
 type SynchronizationWithScoringSystemService struct {
-	orderService       OrderLoader
-	paymentsManagement PaymentsManagement
-	logger             logging.LoggerInterface
+	orderService         OrderLoader
+	paymentsManagement   PaymentsManagement
+	logger               logging.LoggerInterface
+	accrualSystemAddress string
 }
 
 func NewSynchronizationWithScoringSystemService(
 	orderService OrderLoader,
 	paymentsManagement PaymentsManagement,
 	logger logging.LoggerInterface,
+	accrualSystemAddress string,
 ) SynchronizationWithScoringSystemService {
 	return SynchronizationWithScoringSystemService{
-		orderService:       orderService,
-		paymentsManagement: paymentsManagement,
-		logger:             logger,
+		orderService:         orderService,
+		paymentsManagement:   paymentsManagement,
+		logger:               logger,
+		accrualSystemAddress: accrualSystemAddress,
 	}
 }
 
@@ -58,7 +61,7 @@ func (service SynchronizationWithScoringSystemService) step() {
 }
 
 func (service SynchronizationWithScoringSystemService) GetOrderStatusInScoringSystem(order entity.Order) (*dto.BonusPointsSystemResponse, error) {
-	response, err := http.Get("http://localhost:8080/api/user/test") // @TODO
+	response, err := http.Get(service.accrualSystemAddress + "/api/orders/" + order.Number)
 
 	if err != nil {
 		return nil, err
