@@ -37,7 +37,7 @@ func main() {
 	paymentManagement := service.NewPaymentManagement(paymentRepository)
 
 	synchronizationWithScoringSystemService := service.NewSynchronizationWithScoringSystemService(
-		*orderLoaderService, *paymentManagement, logger, config.GetAccrualSystemAddress()
+		*orderLoaderService, *paymentManagement, logger, config.GetAccrualSystemAddress(),
 	)
 	go synchronizationWithScoringSystemService.Init()
 
