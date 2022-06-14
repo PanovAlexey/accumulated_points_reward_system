@@ -88,10 +88,6 @@ func (service SynchronizationWithScoringSystemService) GetOrderStatusInScoringSy
 func (service SynchronizationWithScoringSystemService) handleOrderByStatusInScoringSystem(
 	order entity.Order, response dto.BonusPointsSystemResponse,
 ) {
-	/*if response.Status == "REGISTERED" {
-		// @ToDo: do something
-	}*/
-
 	if response.Status == "INVALID" {
 		err := service.orderService.SetInvalidStatus(order)
 
