@@ -39,22 +39,7 @@ func (repository paymentRepository) GetBalance(userID int64) (float64, error) {
 	return balance.Float64, nil
 }
 
-func (repository paymentRepository) Create(userID, orderID int64, sum float64) (entity.Payment, error) {
-	var payment entity.Payment
-
-	err := payment.Order.Scan(orderID)
-
-	if err != nil {
-		return payment, err
-	}
-
-	err = payment.UserID.Scan(userID)
-
-	if err != nil {
-		return payment, err
-	}
-
-	payment.Sum = sum
+func (repository paymentRepository) Create(payment entity.Payment) (entity.Payment, error) {
 	payment.ProcessedAt = time.Now().Format(time.RFC3339)
 
 	rows, err := repository.db.NamedQuery(

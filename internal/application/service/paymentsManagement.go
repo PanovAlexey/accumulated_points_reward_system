@@ -17,7 +17,23 @@ func NewPaymentManagement(paymentRepository repository.PaymentRepository) *Payme
 }
 
 func (service PaymentsManagement) Debt(order entity.Order, sum float64) (entity.Payment, error) {
-	return service.paymentRepository.Create(order.UserID.Int64, order.ID.Int64, sum)
+	var payment entity.Payment
+
+	err := payment.Order.Scan(order.ID.Int64)
+
+	if err != nil {
+		return payment, err
+	}
+
+	err = payment.UserID.Scan(order.UserID.Int64)
+
+	if err != nil {
+		return payment, err
+	}
+
+	payment.Sum = sum
+
+	return service.paymentRepository.Create(payment)
 }
 
 func (service PaymentsManagement) Credit(order entity.Order, sum float64) (entity.Payment, error) {
@@ -25,7 +41,23 @@ func (service PaymentsManagement) Credit(order entity.Order, sum float64) (entit
 		sum = sum * (-1)
 	}
 
-	return service.paymentRepository.Create(order.UserID.Int64, order.ID.Int64, sum)
+	var payment entity.Payment
+
+	err := payment.Order.Scan(order.ID.Int64)
+
+	if err != nil {
+		return payment, err
+	}
+
+	err = payment.UserID.Scan(order.UserID.Int64)
+
+	if err != nil {
+		return payment, err
+	}
+
+	payment.Sum = sum
+
+	return service.paymentRepository.Create(payment)
 }
 
 func (service PaymentsManagement) GetOrderIDToPaymentMap(orders []entity.Order) (map[int64]entity.Payment, error) {
