@@ -31,7 +31,7 @@ func (service OrderLoader) PostOrder(number string, userID int64) (*entity.Order
 		return nil, fmt.Errorf("%v: %w", number, applicationErrors.ErrorOrderNumberInvalid)
 	}
 
-	order, err := service.GetOrderByNumber(numberInt)
+	order, err := service.orderRepository.GetOrder(numberInt)
 
 	if err != nil {
 		return nil, err
@@ -45,27 +45,13 @@ func (service OrderLoader) PostOrder(number string, userID int64) (*entity.Order
 		}
 	}
 
-	order, err = service.SaveOrder(numberInt, userID)
+	order, err = service.saveOrder(numberInt, userID)
 
 	if err != nil {
 		return nil, err
 	}
 
 	return order, nil
-}
-
-func (service OrderLoader) GetOrderByNumber(number int64) (*entity.Order, error) {
-	order, err := service.orderRepository.GetOrder(number)
-
-	return order, err
-}
-
-func (service OrderLoader) SaveOrder(number int64, userID int64) (*entity.Order, error) {
-	order, err := service.orderRepository.CreateOrder(
-		*entity.NewOrder(number, service.statusGetter.GetRegisteredStatusID(), userID),
-	)
-
-	return &order, err
 }
 
 func (service OrderLoader) GetOrdersByUserID(userID int64) (*[]entity.Order, error) {
@@ -95,6 +81,14 @@ func (service OrderLoader) SetProcessingStatus(order entity.Order) error {
 
 func (service OrderLoader) SetProcessedStatus(order entity.Order) error {
 	return service.orderRepository.SetOrderStatusID(order.ID.Int64, service.statusGetter.GetProcessedStatusID())
+}
+
+func (service OrderLoader) saveOrder(number int64, userID int64) (*entity.Order, error) {
+	order, err := service.orderRepository.CreateOrder(
+		*entity.NewOrder(number, service.statusGetter.GetRegisteredStatusID(), userID),
+	)
+
+	return &order, err
 }
 
 func (service OrderLoader) validate(numberOrder string) (int64, error) {
