@@ -3,25 +3,26 @@ package config
 import (
 	"flag"
 	"fmt"
-	"os"
+	"github.com/kelseyhightower/envconfig"
+	"log"
 )
 
 type serverConfig struct {
-	address string
+	Address string `envconfig:"run_address" default:"0.0.0.0:8080"`
 }
 
 type storageConfig struct {
-	databaseDsn string
+	DatabaseDsn string `envconfig:"database_uri" default:""`
 }
 
 type applicationConfig struct {
-	environment string
-	loggerDsn   string
-	isDebug     bool
+	Environment string `envconfig:"environment" default:"dev"`
+	LoggerDsn   string `envconfig:"logger_dsn" default:"https://1e8c898aac7c45259639d9a6eae5a926@o1210124.ingest.sentry.io/6345772"`
+	IsDebug     bool   `envconfig:"is_debug" default:"false"`
 }
 
 type externalSystemsConfig struct {
-	accrualSystemAddress string
+	AccrualSystemAddress string `envconfig:"accrual_system_address" default:"http://localhost:8080/api/orders/"`
 }
 
 type Config struct {
@@ -33,6 +34,7 @@ type Config struct {
 
 func NewConfig() Config {
 	config := Config{}
+
 	config = initConfigByEnv(config)
 	config = initConfigByFlag(config)
 
@@ -40,36 +42,62 @@ func NewConfig() Config {
 }
 
 func (c Config) GetServerAddress() string {
-	return c.server.address
+	return c.server.Address
 }
 
 func (c Config) GetAppEnvironment() string {
-	return c.application.environment
+	return c.application.Environment
 }
 
 func (c Config) GetAppLoggerDsn() string {
-	return c.application.loggerDsn
+	return c.application.LoggerDsn
 }
 
 func (c Config) IsAppDebugMode() bool {
-	return c.application.isDebug
+	return c.application.IsDebug
 }
 
 func (c Config) GetDatabaseDsn() string {
-	return c.storage.databaseDsn
+	return c.storage.DatabaseDsn
 }
 
 func (c Config) GetAccrualSystemAddress() string {
-	return c.externalSystems.accrualSystemAddress
+	return c.externalSystems.AccrualSystemAddress
 }
 
 func initConfigByEnv(c Config) Config {
-	c.server.address = getEnv("RUN_ADDRESS", "0.0.0.0:8080")
-	c.application.isDebug = getEnv("IS_DEBUG", "false") == "true"
-	c.application.environment = getEnv("ENVIRONMENT", "dev")
-	c.application.loggerDsn = getEnv("LOGGER_DSN", "https://1e8c898aac7c45259639d9a6eae5a926@o1210124.ingest.sentry.io/6345772")
-	c.storage.databaseDsn = getEnv("DATABASE_URI", "")
-	c.externalSystems.accrualSystemAddress = getEnv("ACCRUAL_SYSTEM_ADDRESS", "http://localhost:8080/api/orders/")
+	var serverConfig serverConfig
+	err := envconfig.Process("", &serverConfig)
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	var applicationConfig applicationConfig
+	err = envconfig.Process("", &applicationConfig)
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	var storageConfig storageConfig
+	err = envconfig.Process("", &storageConfig)
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	var externalSystemsConfig externalSystemsConfig
+	err = envconfig.Process("", &externalSystemsConfig)
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	c.server = serverConfig
+	c.storage = storageConfig
+	c.externalSystems = externalSystemsConfig
+	c.application = applicationConfig
 
 	return c
 }
@@ -87,24 +115,16 @@ func initConfigByFlag(config Config) Config {
 	flag.Parse()
 
 	if len(*serverAddress) > 0 {
-		config.server.address = *serverAddress
+		config.server.Address = *serverAddress
 	}
 
 	if len(*databaseURI) > 0 {
-		config.storage.databaseDsn = *databaseURI
+		config.storage.DatabaseDsn = *databaseURI
 	}
 
 	if len(*accrualSystemAddress) > 0 {
-		config.externalSystems.accrualSystemAddress = *accrualSystemAddress
+		config.externalSystems.AccrualSystemAddress = *accrualSystemAddress
 	}
 
 	return config
-}
-
-func getEnv(key string, defaultValue string) string {
-	if value, exists := os.LookupEnv(key); exists {
-		return value
-	}
-
-	return defaultValue
 }
