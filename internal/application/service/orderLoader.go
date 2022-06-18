@@ -59,33 +59,29 @@ func (service OrderLoader) GetOrdersByUserID(userID int64) (*[]entity.Order, err
 }
 
 func (service OrderLoader) getOrdersInUnfinishedStatus() (*[]entity.Order, error) {
-	unfinishedStatuesID := service.statusGetter.GetUnfinishedStatusesID()
-	return service.orderRepository.GetOrdersByStatusesID(unfinishedStatuesID)
-}
-
-func (service OrderLoader) GetStatusNameByID(id int) string {
-	return service.statusGetter.GetStatusNameByID(id)
+	unfinishedStatues := service.statusGetter.GetUnfinishedStatuses()
+	return service.orderRepository.GetOrdersByStatuses(unfinishedStatues)
 }
 
 func (service OrderLoader) SetNewStatus(order entity.Order) error {
-	return service.orderRepository.SetOrderStatusID(order.ID.Int64, service.statusGetter.GetRegisteredStatusID())
+	return service.orderRepository.SetOrderStatus(order.ID.Int64, service.statusGetter.GetRegisteredStatus())
 }
 
 func (service OrderLoader) SetInvalidStatus(order entity.Order) error {
-	return service.orderRepository.SetOrderStatusID(order.ID.Int64, service.statusGetter.GetInvalidStatusID())
+	return service.orderRepository.SetOrderStatus(order.ID.Int64, service.statusGetter.GetInvalidStatus())
 }
 
 func (service OrderLoader) SetProcessingStatus(order entity.Order) error {
-	return service.orderRepository.SetOrderStatusID(order.ID.Int64, service.statusGetter.GetProcessingStatusID())
+	return service.orderRepository.SetOrderStatus(order.ID.Int64, service.statusGetter.GetProcessingStatus())
 }
 
 func (service OrderLoader) SetProcessedStatus(order entity.Order) error {
-	return service.orderRepository.SetOrderStatusID(order.ID.Int64, service.statusGetter.GetProcessedStatusID())
+	return service.orderRepository.SetOrderStatus(order.ID.Int64, service.statusGetter.GetProcessedStatus())
 }
 
 func (service OrderLoader) saveOrder(number int64, userID int64) (*entity.Order, error) {
 	order, err := service.orderRepository.CreateOrder(
-		*entity.NewOrder(number, service.statusGetter.GetRegisteredStatusID(), userID),
+		*entity.NewOrder(number, service.statusGetter.GetRegisteredStatus(), userID),
 	)
 
 	return &order, err

@@ -19,7 +19,7 @@ func GetLogger(config config.Config) LoggerInterface {
 		log.Fatalf("can't initialize zap logger: %v", err)
 	}
 
-	initSentry(config.GetAppEnvironment(), config.GetAppLoggerDsn(), config.IsAppDebugMode())
+	initSentry(config.Application.Environment, config.Application.LoggerDsn, config.Application.IsDebug)
 
 	return logger{zap: zapLogger.Sugar()}
 }

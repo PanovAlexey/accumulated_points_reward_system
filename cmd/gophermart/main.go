@@ -41,7 +41,7 @@ func main() {
 	paymentManagement := service.NewPaymentManagement(paymentRepository)
 
 	synchronizationWithScoringSystemService := service.NewSynchronizationWithScoringSystemService(
-		*orderLoaderService, *paymentManagement, logger, config.GetAccrualSystemAddress(),
+		*orderLoaderService, *paymentManagement, logger, config.ExternalSystems.AccrualSystemAddress,
 	)
 
 	go synchronizationWithScoringSystemService.Init()
@@ -61,7 +61,7 @@ func init() {
 }
 
 func getDatabaseConnector(logger logging.LoggerInterface, config config.Config) *sqlx.DB {
-	db, err := databases.NewPostgresDB(config.GetDatabaseDsn())
+	db, err := databases.NewPostgresDB(config.Storage.DatabaseDsn)
 
 	if err != nil {
 		logger.Fatalf("error occurred while initializing database connection: %s", err.Error())

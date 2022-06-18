@@ -7,22 +7,24 @@ import (
 )
 
 type Order struct {
-	ID         sql.NullInt64 `json:"-" db:"id"`
-	Number     string        `json:"number" db:"number" binding:"required"`
-	Status     sql.NullInt64 `json:"status" db:"status" binding:"required"`
-	UserID     sql.NullInt64 `json:"user_id" db:"user_id" binding:"required"`
-	UploadedAt string        `json:"uploaded_at" db:"uploaded_at" binding:"required"`
+	ID         sql.NullInt64  `json:"-" db:"id"`
+	Number     string         `json:"number" db:"number" binding:"required"`
+	Status     sql.NullString `json:"status" db:"status" binding:"required"`
+	UserID     sql.NullInt64  `json:"user_id" db:"user_id" binding:"required"`
+	UploadedAt string         `json:"uploaded_at" db:"uploaded_at" binding:"required"`
 }
 
-func NewOrder(number int64, status int, userID int64) *Order {
-	var userIDNullInt, statusIDNullInt sql.NullInt64
+func NewOrder(number int64, status string, userID int64) *Order {
+	var userIDNullInt sql.NullInt64
+	var statusNullString sql.NullString
+
 	err := userIDNullInt.Scan(userID)
 
 	if err != nil {
 		return nil
 	}
 
-	err = statusIDNullInt.Scan(status)
+	err = statusNullString.Scan(status)
 
 	if err != nil {
 		return nil
@@ -30,7 +32,7 @@ func NewOrder(number int64, status int, userID int64) *Order {
 
 	return &Order{
 		Number:     strconv.FormatInt(number, 10),
-		Status:     statusIDNullInt,
+		Status:     statusNullString,
 		UserID:     userIDNullInt,
 		UploadedAt: time.Now().Format(time.RFC3339),
 	}
