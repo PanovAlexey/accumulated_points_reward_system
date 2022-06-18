@@ -7,36 +7,22 @@ func GetOrderStatusGetter() orderStatusGetter {
 	return orderStatusGetter{}
 }
 
-func (service orderStatusGetter) GetStatuses() map[int]string {
-	return map[int]string{
-		1: "NEW",
-		2: "INVALID",
-		3: "PROCESSING",
-		4: "PROCESSED",
-	}
+func (service orderStatusGetter) GetRegisteredStatus() string {
+	return "NEW"
 }
 
-func (service orderStatusGetter) GetRegisteredStatusID() int {
-	return 1
+func (service orderStatusGetter) GetInvalidStatus() string {
+	return "INVALID"
 }
 
-func (service orderStatusGetter) GetInvalidStatusID() int {
-	return 2
+func (service orderStatusGetter) GetProcessingStatus() string {
+	return "PROCESSING"
 }
 
-func (service orderStatusGetter) GetProcessingStatusID() int {
-	return 3
+func (service orderStatusGetter) GetProcessedStatus() string {
+	return "PROCESSED"
 }
 
-func (service orderStatusGetter) GetProcessedStatusID() int {
-	return 4
-}
-
-func (service orderStatusGetter) GetStatusNameByID(statusID int) string {
-	statuses := service.GetStatuses()
-	return statuses[statusID]
-}
-
-func (service orderStatusGetter) GetUnfinishedStatusesID() []int {
-	return []int{service.GetRegisteredStatusID(), service.GetProcessingStatusID()}
+func (service orderStatusGetter) GetUnfinishedStatuses() []string {
+	return []string{service.GetRegisteredStatus(), service.GetProcessingStatus()}
 }

@@ -76,30 +76,33 @@ func (repository orderRepository) GetOrdersByUserID(userID int64) (*[]entity.Ord
 	return &orders, nil
 }
 
-func (repository orderRepository) SetOrderStatusID(orderID int64, statusID int) error {
+func (repository orderRepository) SetOrderStatus(orderID int64, status string) error {
 	_, err := repository.db.Exec(
 		"UPDATE " + databases.OrdersTableNameConst +
-			" SET status=" + strconv.Itoa(statusID) +
-			" WHERE id=" + strconv.FormatInt(orderID, 10),
+			" SET status='" + status +
+			"' WHERE id=" + strconv.FormatInt(orderID, 10),
 	)
 
 	return err
 }
 
-func (repository orderRepository) GetOrdersByStatusesID(statusesID []int) (*[]entity.Order, error) {
+func (repository orderRepository) GetOrdersByStatuses(statuses []string) (*[]entity.Order, error) {
 	var orders []entity.Order
 
-	if len(statusesID) == 0 {
+	if len(statuses) == 0 {
 		return &orders, nil
 	}
 
-	stmt, err := repository.db.Prepare("SELECT * FROM " + databases.OrdersTableNameConst + " WHERE status = ANY($1)")
+	stmt, err := repository.db.Prepare(
+		"SELECT id, status, number, user_id, uploaded_at FROM " +
+			databases.OrdersTableNameConst + " WHERE status = ANY($1)",
+	)
 
 	if err != nil {
 		return nil, err
 	}
 
-	rows, err := stmt.Query(pq.Array(statusesID))
+	rows, err := stmt.Query(pq.Array(statuses))
 
 	if err != nil {
 		return nil, err

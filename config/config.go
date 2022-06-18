@@ -7,6 +7,13 @@ import (
 	"log"
 )
 
+type Config struct {
+	Server          serverConfig
+	Application     applicationConfig
+	Storage         storageConfig
+	ExternalSystems externalSystemsConfig
+}
+
 type serverConfig struct {
 	Address string `envconfig:"run_address" default:"0.0.0.0:8080"`
 }
@@ -25,13 +32,6 @@ type externalSystemsConfig struct {
 	AccrualSystemAddress string `envconfig:"accrual_system_address" default:"http://localhost:8080/api/orders/"`
 }
 
-type Config struct {
-	server          serverConfig
-	application     applicationConfig
-	storage         storageConfig
-	externalSystems externalSystemsConfig
-}
-
 func NewConfig() Config {
 	config := Config{}
 
@@ -39,30 +39,6 @@ func NewConfig() Config {
 	config = initConfigByFlag(config)
 
 	return config
-}
-
-func (c Config) GetServerAddress() string {
-	return c.server.Address
-}
-
-func (c Config) GetAppEnvironment() string {
-	return c.application.Environment
-}
-
-func (c Config) GetAppLoggerDsn() string {
-	return c.application.LoggerDsn
-}
-
-func (c Config) IsAppDebugMode() bool {
-	return c.application.IsDebug
-}
-
-func (c Config) GetDatabaseDsn() string {
-	return c.storage.DatabaseDsn
-}
-
-func (c Config) GetAccrualSystemAddress() string {
-	return c.externalSystems.AccrualSystemAddress
 }
 
 func initConfigByEnv(c Config) Config {
@@ -94,10 +70,10 @@ func initConfigByEnv(c Config) Config {
 		log.Fatal(err.Error())
 	}
 
-	c.server = serverConfig
-	c.storage = storageConfig
-	c.externalSystems = externalSystemsConfig
-	c.application = applicationConfig
+	c.Server = serverConfig
+	c.Storage = storageConfig
+	c.ExternalSystems = externalSystemsConfig
+	c.Application = applicationConfig
 
 	return c
 }
@@ -115,15 +91,15 @@ func initConfigByFlag(config Config) Config {
 	flag.Parse()
 
 	if len(*serverAddress) > 0 {
-		config.server.Address = *serverAddress
+		config.Server.Address = *serverAddress
 	}
 
 	if len(*databaseURI) > 0 {
-		config.storage.DatabaseDsn = *databaseURI
+		config.Storage.DatabaseDsn = *databaseURI
 	}
 
 	if len(*accrualSystemAddress) > 0 {
-		config.externalSystems.AccrualSystemAddress = *accrualSystemAddress
+		config.ExternalSystems.AccrualSystemAddress = *accrualSystemAddress
 	}
 
 	return config

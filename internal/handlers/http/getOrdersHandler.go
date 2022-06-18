@@ -48,7 +48,7 @@ func (h *httpHandler) getOrders(c *gin.Context) {
 	for _, order := range *orders {
 		orderOutput := dto.OrderOutputDto{
 			Number:     order.Number,
-			Status:     h.orderLoaderService.GetStatusNameByID(int(order.Status.Int64)),
+			Status:     order.Status.String,
 			UploadedAt: time.Now().Format(time.RFC3339),
 		}
 
