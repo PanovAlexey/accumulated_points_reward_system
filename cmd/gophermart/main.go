@@ -24,7 +24,6 @@ func main() {
 	defer db.Close()
 
 	migrationService := databases.GetMigrationService(db)
-	migrationService.MigrateDown()
 	migrationService.MigrateUp()
 
 	time.Sleep(time.Second * 1)
