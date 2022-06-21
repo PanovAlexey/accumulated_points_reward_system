@@ -32,19 +32,19 @@ func (h *httpHandler) addOrder(c *gin.Context) {
 	orderNumber := string(body)
 	order, err := h.orderLoaderService.PostOrder(orderNumber, int64(userCtxValue.(int)))
 
-	if errors.Is(err, applicationErrors.ErrorOrderNumberInvalid) {
+	if errors.Is(err, applicationErrors.ErrOrderNumberInvalid) {
 		responses.NewErrorResponse(c, http.StatusUnprocessableEntity, err.Error())
 		h.logger.Warn(err.Error())
 		return
 	}
 
-	if errors.Is(err, applicationErrors.ErrorOrderAlreadySent) {
+	if errors.Is(err, applicationErrors.ErrOrderAlreadySent) {
 		responses.NewErrorResponse(c, http.StatusOK, err.Error())
 		h.logger.Warn(err.Error(), orderNumber)
 		return
 	}
 
-	if errors.Is(err, applicationErrors.ErrorOrderAlreadyExists) {
+	if errors.Is(err, applicationErrors.ErrOrderAlreadyExists) {
 		responses.NewErrorResponse(c, http.StatusConflict, err.Error())
 		h.logger.Warn(err.Error(), orderNumber)
 		return

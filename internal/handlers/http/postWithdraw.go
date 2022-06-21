@@ -57,7 +57,7 @@ func (h *httpHandler) postWithdraw(c *gin.Context) {
 	order, err := h.orderLoaderService.PostOrder(orderInputDto.Order, int64(userCtxValue.(int)))
 
 	if err != nil {
-		if errors.Is(err, applicationErrors.ErrorOrderNumberInvalid) {
+		if errors.Is(err, applicationErrors.ErrOrderNumberInvalid) {
 			responses.NewErrorResponse(c, http.StatusUnprocessableEntity, err.Error())
 			h.logger.Warn(err.Error())
 			return

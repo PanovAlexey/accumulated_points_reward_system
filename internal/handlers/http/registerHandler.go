@@ -21,7 +21,7 @@ func (h *httpHandler) register(c *gin.Context) {
 	registeredUser, err := h.userRegistrationService.Register(user)
 
 	if err != nil {
-		if errors.Is(err, applicationErrors.ErrorUserAlreadyExists) {
+		if errors.Is(err, applicationErrors.ErrUserAlreadyExists) {
 			responses.NewErrorResponse(c, http.StatusConflict, err.Error())
 			h.logger.Warn(err.Error())
 
