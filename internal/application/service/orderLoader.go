@@ -28,7 +28,7 @@ func (service OrderLoader) PostOrder(number string, userID int64) (*entity.Order
 	numberInt, err := service.validate(number)
 
 	if err != nil {
-		return nil, fmt.Errorf("%v: %w", number, applicationErrors.ErrorOrderNumberInvalid)
+		return nil, fmt.Errorf("%v: %w", number, applicationErrors.ErrOrderNumberInvalid)
 	}
 
 	order, err := service.orderRepository.GetOrder(numberInt)
@@ -39,9 +39,9 @@ func (service OrderLoader) PostOrder(number string, userID int64) (*entity.Order
 
 	if order != nil {
 		if order.UserID.Int64 == userID {
-			return order, fmt.Errorf("%v: %w", number, applicationErrors.ErrorOrderAlreadySent)
+			return order, fmt.Errorf("%v: %w", number, applicationErrors.ErrOrderAlreadySent)
 		} else {
-			return order, fmt.Errorf("%v: %w", number, applicationErrors.ErrorOrderAlreadyExists)
+			return order, fmt.Errorf("%v: %w", number, applicationErrors.ErrOrderAlreadyExists)
 		}
 	}
 

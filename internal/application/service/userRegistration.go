@@ -41,7 +41,7 @@ func (service UserRegistration) Register(user entity.User) (entity.User, error) 
 	isLoginExist, _ := service.userRepository.IsLoginExist(user.Login)
 
 	if isLoginExist {
-		return user, fmt.Errorf("%v: %w", user.Login, applicationErrors.ErrorUserAlreadyExists)
+		return user, fmt.Errorf("%v: %w", user.Login, applicationErrors.ErrUserAlreadyExists)
 	}
 
 	passwordHash, err := service.generatePasswordHash(user.Password)
