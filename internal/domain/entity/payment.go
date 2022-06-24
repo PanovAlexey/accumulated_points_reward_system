@@ -11,19 +11,3 @@ type Payment struct {
 	ProcessedAt string        `json:"processed_at" db:"processed_at"`
 	UserID      sql.NullInt64 `json:"user_id" db:"user_id" binding:"required"`
 }
-
-/*
-func (w Withdrawal) MarshalJSON() ([]byte, error) {
-	type WithdrawalAlias Withdrawal
-
-	aliasValue := struct {
-		WithdrawalAlias
-		ProcessedAt string `json:"processed_at"`
-	}{
-		WithdrawalAlias: WithdrawalAlias(w),
-		ProcessedAt:     w.ProcessedAt.Format(time.RFC3339),
-	}
-
-	return json.Marshal(aliasValue)
-}
-*/
