@@ -3,6 +3,7 @@ package servers
 import (
 	"github.com/PanovAlexey/accumulated_points_reward_system/config"
 	"net/http"
+	_ "net/http/pprof"
 	"time"
 )
 
