@@ -12,6 +12,12 @@ type Server struct {
 }
 
 func (s *Server) Run(config config.Config, handler http.Handler) error {
+	if config.Application.IsDebug == true {
+		go func() {
+			http.ListenAndServe(config.Server.DebugAddress, nil)
+		}()
+	}
+
 	s.httpServer = &http.Server{
 		Addr:           config.Server.Address,
 		Handler:        handler,

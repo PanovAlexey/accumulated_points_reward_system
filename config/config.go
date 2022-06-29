@@ -15,7 +15,8 @@ type Config struct {
 }
 
 type serverConfig struct {
-	Address string `envconfig:"run_address" default:"0.0.0.0:8080"`
+	Address      string `envconfig:"run_address" default:"0.0.0.0:8080"`
+	DebugAddress string `envconfig:"debug_address" default:"0.0.0.0:8081"`
 }
 
 type storageConfig struct {
