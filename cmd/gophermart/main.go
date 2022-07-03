@@ -11,7 +11,6 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 	"log"
-	"time"
 )
 
 func main() {
@@ -25,8 +24,6 @@ func main() {
 
 	migrationService := databases.GetMigrationService(db)
 	migrationService.MigrateUp()
-
-	time.Sleep(time.Second * 1)
 
 	userRegistrationRepository := repository.NewUserRepository(db)
 	userRegistrationService := service.NewUserRegistrationService(userRegistrationRepository)
