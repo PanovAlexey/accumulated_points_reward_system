@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/PanovAlexey/accumulated_points_reward_system/config"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/application/service"
+	"github.com/PanovAlexey/accumulated_points_reward_system/internal/application/service/luhn"
 	httpProject "github.com/PanovAlexey/accumulated_points_reward_system/internal/handlers/http"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/infrastructure/databases"
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/infrastructure/logging"
@@ -29,7 +30,7 @@ func main() {
 	userRegistrationService := service.NewUserRegistrationService(userRegistrationRepository)
 
 	orderStatusGetter := service.GetOrderStatusGetter()
-	orderNumberValidator := service.GetLuhnAlgorithmChecker()
+	orderNumberValidator := luhn.GetLuhnAlgorithmChecker()
 	orderRepository := repository.NewOrderRepository(db)
 	orderLoaderService := service.NewOrderLoaderService(orderRepository, orderNumberValidator, orderStatusGetter)
 
