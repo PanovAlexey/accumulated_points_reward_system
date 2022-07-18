@@ -8,6 +8,7 @@ import (
 	"time"
 )
 
+// getOrders endpoint for returning information about user orders
 func (h *httpHandler) getOrders(c *gin.Context) {
 	userCtxValue, isExist := c.Get(h.userRegistrationService.GetUserCtx())
 

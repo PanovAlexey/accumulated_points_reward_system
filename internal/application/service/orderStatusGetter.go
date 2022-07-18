@@ -1,5 +1,6 @@
 package service
 
+// orderStatusGetter service contains all possible order statuses and implements work with them
 type orderStatusGetter struct {
 }
 

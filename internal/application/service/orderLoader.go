@@ -8,6 +8,8 @@ import (
 	"strconv"
 )
 
+// OrderLoader contains methods for getting an order from the database,
+// for creating a new order, and for editing an existing one.
 type OrderLoader struct {
 	orderRepository      repository.OrderRepository
 	orderNumberValidator OrderValidator

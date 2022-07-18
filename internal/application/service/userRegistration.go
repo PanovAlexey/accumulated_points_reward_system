@@ -18,6 +18,7 @@ const (
 	signingKey = "qweqr78939870424&(#$@"
 )
 
+// UserRegistration provides the ability to register new users, authorize existing ones and work with secret tokens.
 type UserRegistration struct {
 	userRepository repository.UserRepository
 }

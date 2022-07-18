@@ -11,6 +11,7 @@ func GetLuhnAlgorithmChecker() luhnAlgorithmChecker {
 	return luhnAlgorithmChecker{}
 }
 
+// Validate method checks if the passed number matches the Luhn algorithm
 func (checker luhnAlgorithmChecker) Validate(number int64) error {
 	if (number%10+checksum(number/10))%10 != 0 {
 		return errors.New("the number does not satisfy Luhn's algorithm")

@@ -6,6 +6,7 @@ import (
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain/entity"
 )
 
+// PaymentsManagement for working with the balance, accruals, debits of money from the user's account
 type PaymentsManagement struct {
 	paymentRepository repository.PaymentRepository
 }

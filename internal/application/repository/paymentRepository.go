@@ -5,6 +5,7 @@ import (
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain/entity"
 )
 
+// PaymentRepository provides interface describing methods for working with orders
 type PaymentRepository interface {
 	GetBalance(userID int64) (float64, error)
 	Create(payment entity.Payment) (entity.Payment, error)

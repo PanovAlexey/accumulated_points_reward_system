@@ -7,6 +7,7 @@ import (
 	"net/http"
 )
 
+// getBalance endpoint for returning information about the user's current balance
 func (h *httpHandler) getBalance(c *gin.Context) {
 	userCtxValue, isExist := c.Get(h.userRegistrationService.GetUserCtx())
 

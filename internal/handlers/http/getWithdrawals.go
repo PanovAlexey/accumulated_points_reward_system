@@ -6,6 +6,7 @@ import (
 	"net/http"
 )
 
+// endpoint for returning information about withdrawals from the user's account
 func (h *httpHandler) getWithdrawals(c *gin.Context) {
 	userCtxValue, isExist := c.Get(h.userRegistrationService.GetUserCtx())
 

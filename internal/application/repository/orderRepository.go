@@ -4,6 +4,7 @@ import (
 	"github.com/PanovAlexey/accumulated_points_reward_system/internal/domain/entity"
 )
 
+// OrderRepository repository provides interface describing methods for working with orders
 type OrderRepository interface {
 	CreateOrder(order entity.Order) (entity.Order, error)
 	GetOrder(number int64) (*entity.Order, error)

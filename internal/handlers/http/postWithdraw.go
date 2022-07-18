@@ -11,6 +11,7 @@ import (
 	"strconv"
 )
 
+// postWithdraw endpoint for withdrawing bonuses on account of the order.
 func (h *httpHandler) postWithdraw(c *gin.Context) {
 	userCtxValue, isExist := c.Get(h.userRegistrationService.GetUserCtx())
 

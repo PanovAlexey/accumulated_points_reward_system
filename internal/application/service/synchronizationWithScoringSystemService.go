@@ -14,6 +14,7 @@ import (
 
 const orderProcessingFrequencyInterval = 1 * time.Second
 
+// SynchronizationWithScoringSystemService updates order statuses, receiving up-to-date data from an external system
 type SynchronizationWithScoringSystemService struct {
 	orderService         OrderLoader
 	paymentsManagement   PaymentsManagement

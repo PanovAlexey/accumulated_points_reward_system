@@ -9,6 +9,7 @@ import (
 	"net/http"
 )
 
+// addOrder endpoint for adding order information
 func (h *httpHandler) addOrder(c *gin.Context) {
 	body, err := io.ReadAll(c.Request.Body)
 	defer c.Request.Body.Close()

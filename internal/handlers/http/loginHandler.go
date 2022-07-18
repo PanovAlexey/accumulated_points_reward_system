@@ -7,6 +7,7 @@ import (
 	"net/http"
 )
 
+// login endpoint for user authorization - accepts a login and password, and returns a token
 func (h *httpHandler) login(c *gin.Context) {
 	var userAuth dto.UserAuthDto
 
