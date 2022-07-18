@@ -13,7 +13,7 @@ type Server struct {
 }
 
 func (s *Server) Run(config config.Config, handler http.Handler) error {
-	if config.Application.IsDebug == true {
+	if config.Application.IsDebug {
 		go func() {
 			http.ListenAndServe(config.Server.DebugAddress, nil)
 		}()
