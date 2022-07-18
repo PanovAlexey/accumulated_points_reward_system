@@ -3,6 +3,7 @@ package servers
 
 import (
 	"github.com/PanovAlexey/accumulated_points_reward_system/config"
+	"github.com/PanovAlexey/accumulated_points_reward_system/internal/infrastructure/logging"
 	"net/http"
 	_ "net/http/pprof"
 	"time"
@@ -12,10 +13,13 @@ type Server struct {
 	httpServer *http.Server
 }
 
-func (s *Server) Run(config config.Config, handler http.Handler) error {
+func (s *Server) Run(config config.Config, handler http.Handler, logger logging.LoggerInterface) error {
 	if config.Application.IsDebug {
 		go func() {
-			http.ListenAndServe(config.Server.DebugAddress, nil)
+			err := http.ListenAndServe(config.Server.DebugAddress, nil)
+			if err != nil {
+				logger.Error("error occurred while running http documentation server: %s", err.Error())
+			}
 		}()
 	}
 

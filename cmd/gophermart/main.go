@@ -45,7 +45,7 @@ func main() {
 	handler := httpProject.NewHandler(logger, userRegistrationService, orderLoaderService, paymentManagement)
 	server := new(servers.Server)
 
-	if err := server.Run(config, handler.InitRoutes()); err != nil {
+	if err := server.Run(config, handler.InitRoutes(), logger); err != nil {
 		logger.Fatalf("error occurred while running http server: %s", err.Error())
 	}
 }
