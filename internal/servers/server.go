@@ -1,3 +1,4 @@
+// Package servers that run an HTTP server to provide endpoints for interacting with the service
 package servers
 
 import (
