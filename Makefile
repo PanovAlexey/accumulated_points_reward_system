@@ -22,7 +22,7 @@ exec:
 	cd .docker && docker-compose exec reward-go-backend bash
 
 test:
-	go test ../...
+	go test ./...
 
 lint:
 	golangci-lint run
