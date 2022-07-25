@@ -67,3 +67,14 @@ func (repository userRepository) GetUser(login, passwordHash string) (entity.Use
 
 	return user, err
 }
+
+func (repository userRepository) GetUserByLogin(login string) (entity.User, error) {
+	var user entity.User
+	err := repository.db.Get(
+		&user,
+		"SELECT * FROM "+databases.UsersTableNameConst+" WHERE login = $1 LIMIT 1",
+		login,
+	)
+
+	return user, err
+}
