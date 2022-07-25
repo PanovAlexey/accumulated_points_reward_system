@@ -8,5 +8,6 @@ import (
 type UserRepository interface {
 	CreateUser(user entity.User) (entity.User, error)
 	GetUser(login, password string) (entity.User, error)
+	GetUserByLogin(login string) (entity.User, error)
 	IsLoginExist(login string) (bool, error)
 }
