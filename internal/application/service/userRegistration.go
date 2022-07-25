@@ -66,6 +66,10 @@ func (service UserRegistration) Auth(login, password string) (entity.User, error
 	return service.userRepository.GetUser(login, passwordHash)
 }
 
+func (service UserRegistration) GetUserByLogin(login string) (entity.User, error) {
+	return service.userRepository.GetUserByLogin(login)
+}
+
 func (service UserRegistration) GenerateToken(userID int) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
 		jwt.StandardClaims{
