@@ -14,7 +14,7 @@ services:
     volumes:
       - ../:/app
     working_dir: /app
-    command: go run cmd/gophermart/main.go
+    command: sh -c "apk update && apk --no-cache --update add build-base && go run cmd/gophermart/main.go"
 
   reward-go-doc:
     container_name: reward_go_doc
