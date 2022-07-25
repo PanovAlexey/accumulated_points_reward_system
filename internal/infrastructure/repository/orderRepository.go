@@ -60,6 +60,21 @@ func (repository orderRepository) GetOrder(number int64) (*entity.Order, error) 
 	return &order, err
 }
 
+func (repository orderRepository) DeleteOrdersByUserID(number int64) error {
+	var order entity.Order
+	err := repository.db.Get(
+		&order,
+		"DELETE FROM "+databases.OrdersTableNameConst+" WHERE user_id = $1",
+		number,
+	)
+
+	if err == sql.ErrNoRows {
+		return nil
+	}
+
+	return err
+}
+
 func (repository orderRepository) GetOrdersByUserID(userID int64) (*[]entity.Order, error) {
 	var orders []entity.Order
 
