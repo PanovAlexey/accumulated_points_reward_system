@@ -20,7 +20,7 @@ type serverConfig struct {
 }
 
 type storageConfig struct {
-	DatabaseDsn string `envconfig:"database_uri" default:""`
+	DatabaseDsn string `envconfig:"database_uri" default:"postgresql://postgresql_user:user_password@reward_postgres_container:5432/postgresql?sslmode=disable"`
 }
 
 type applicationConfig struct {
