@@ -60,6 +60,10 @@ func (service OrderLoader) GetOrdersByUserID(userID int64) (*[]entity.Order, err
 	return service.orderRepository.GetOrdersByUserID(userID)
 }
 
+func (service OrderLoader) DeleteOrdersByUserID(userID int64) error {
+	return service.orderRepository.DeleteOrdersByUserID(userID)
+}
+
 func (service OrderLoader) getOrdersInUnfinishedStatus() (*[]entity.Order, error) {
 	unfinishedStatues := service.statusGetter.GetUnfinishedStatuses()
 	return service.orderRepository.GetOrdersByStatuses(unfinishedStatues)
