@@ -43,6 +43,17 @@ func Test_handleAddAndGetRequests(t *testing.T) {
 		body    []byte
 		want    want
 	}{}
+		{
+			name:    "Positive test. Get ping info.",
+			urlPath: "/ping",
+			method:  http.MethodGet,
+			body:    nil,
+			want: want{
+				code:              http.StatusOK,
+				response:          `OK`,
+				contentTypeHeader: "text/plain; charset=utf-8",
+			},
+		},
 
 	for _, testData := range tests {
 		response, bodyString := testRequest(
