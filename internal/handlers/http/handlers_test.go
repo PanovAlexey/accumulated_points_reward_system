@@ -80,6 +80,22 @@ func Test_handleAddAndGetRequests(t *testing.T) {
 				contentTypeHeader: "application/json",
 			},
 		},
+		{
+			name:    "Positive test. Authorization.",
+			urlPath: "/api/user/login",
+			method:  http.MethodPost,
+			headers: map[string]string{
+				"Content-Type": "application/json",
+			},
+			body: []byte(`{
+					"login": "test@test.test",
+					"password": "password"
+				}`),
+			want: want{
+				code:              http.StatusOK,
+				contentTypeHeader: "application/json",
+			},
+		},
 
 	for _, testData := range tests {
 		response, bodyString := testRequest(
