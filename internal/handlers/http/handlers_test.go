@@ -96,6 +96,20 @@ func Test_handleAddAndGetRequests(t *testing.T) {
 				contentTypeHeader: "application/json",
 			},
 		},
+		{
+			name:    "Negative test. Get user balance by wrong token.",
+			urlPath: "/api/user/balance",
+			method:  http.MethodGet,
+			body:    nil,
+			headers: map[string]string{
+				"Authorization": "wrong_token",
+			},
+			want: want{
+				code:              http.StatusUnauthorized,
+				response:          `"invalid auth header"`,
+				contentTypeHeader: "application/json; charset=utf-8",
+			},
+		},
 
 	for _, testData := range tests {
 		response, bodyString := testRequest(
