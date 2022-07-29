@@ -42,7 +42,7 @@ func Test_handleAddAndGetRequests(t *testing.T) {
 		headers map[string]string
 		body    []byte
 		want    want
-	}{}
+	}{
 		{
 			name:    "Positive test. Get ping info.",
 			urlPath: "/ping",
@@ -52,6 +52,17 @@ func Test_handleAddAndGetRequests(t *testing.T) {
 				code:              http.StatusOK,
 				response:          `OK`,
 				contentTypeHeader: "text/plain; charset=utf-8",
+			},
+		},
+		{
+			name:    "Wrong test. Request to a non-existent address.",
+			urlPath: "/non-existent-address-404",
+			method:  http.MethodGet,
+			body:    nil,
+			want: want{
+				code:              http.StatusNotFound,
+				response:          `404 page not found`,
+				contentTypeHeader: "text/plain",
 			},
 		},
 
