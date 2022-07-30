@@ -124,6 +124,20 @@ func Test_handleAddAndGetRequests(t *testing.T) {
 				contentTypeHeader: "application/json",
 			},
 		},
+		{
+			name:    "Positive test. Get user withdrawals.",
+			urlPath: "/api/user/balance/withdrawals",
+			method:  http.MethodGet,
+			body:    nil,
+			headers: map[string]string{
+				"Authorization": testData["user_auth_token"],
+			},
+			want: want{
+				code:              http.StatusNoContent,
+				response:          ``,
+				contentTypeHeader: "application/json",
+			},
+		},
 
 	for _, testData := range tests {
 		response, bodyString := testRequest(
