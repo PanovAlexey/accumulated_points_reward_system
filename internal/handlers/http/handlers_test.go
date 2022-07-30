@@ -138,6 +138,20 @@ func Test_handleAddAndGetRequests(t *testing.T) {
 				contentTypeHeader: "application/json",
 			},
 		},
+		{
+			name:    "Positive test. Create order.",
+			urlPath: "/api/user/orders",
+			method:  http.MethodPost,
+			headers: map[string]string{
+				"Content-Type":  "application/json",
+				"Authorization": testData["user_auth_token"],
+			},
+			body: []byte(`79927398713`),
+			want: want{
+				code:              http.StatusAccepted,
+				contentTypeHeader: "application/json",
+			},
+		},
 
 	for _, testData := range tests {
 		response, bodyString := testRequest(
