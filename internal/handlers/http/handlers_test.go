@@ -166,6 +166,21 @@ func Test_handleAddAndGetRequests(t *testing.T) {
 				contentTypeHeader: "application/json",
 			},
 		},
+		{
+			name:    "Negative test. Withdraw bonus points for new order.",
+			urlPath: "/api/user/balance/withdraw",
+			method:  http.MethodPost,
+			headers: map[string]string{
+				"Content-Type":  "application/json",
+				"Authorization": testData["user_auth_token"],
+			},
+			body: []byte(`{"order":"4000001234567899","sum":99999999}`),
+			want: want{
+				code:              http.StatusPaymentRequired,
+				contentTypeHeader: "application/json",
+			},
+		},
+	}
 
 	for _, testData := range tests {
 		response, bodyString := testRequest(
