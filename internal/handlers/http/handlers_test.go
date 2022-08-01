@@ -152,6 +152,20 @@ func Test_handleAddAndGetRequests(t *testing.T) {
 				contentTypeHeader: "application/json",
 			},
 		},
+		{
+			name:    "Negative test. Send order with a wrong number.",
+			urlPath: "/api/user/orders",
+			method:  http.MethodPost,
+			headers: map[string]string{
+				"Content-Type":  "application/json",
+				"Authorization": testData["user_auth_token"],
+			},
+			body: []byte(`12345`),
+			want: want{
+				code:              http.StatusUnprocessableEntity,
+				contentTypeHeader: "application/json",
+			},
+		},
 
 	for _, testData := range tests {
 		response, bodyString := testRequest(
