@@ -3,10 +3,12 @@ package luhn
 import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
+	"io/ioutil"
+	"log"
 	"testing"
 )
 
-func ExampleValidate() {
+func Example_validate() {
 	var correctOrderNumber int64 = 79927398713
 
 	luhnChecker := GetLuhnAlgorithmChecker()
@@ -25,7 +27,7 @@ func ExampleValidate() {
 	// Output:Order number 79927398713 is correct.
 }
 
-func ExampleValidateWrong() {
+func Example_validateWrong() {
 	var wrongOrderNumber int64 = 111222333
 
 	luhnChecker := GetLuhnAlgorithmChecker()
@@ -94,4 +96,37 @@ func Test_Validate(t *testing.T) {
 			assert.Equal(t, luhnChecker.Validate(tt.value) == nil, tt.want)
 		})
 	}
+}
+
+func BenchmarkValidate(b *testing.B) {
+	luhnChecker := GetLuhnAlgorithmChecker()
+
+	startCheckingNumber := 10000
+	stopCheckingNumber := 100000
+
+	b.Run("optimized", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			for j := startCheckingNumber; j < stopCheckingNumber; j++ {
+				err := luhnChecker.ValidateOptimized(int64(j))
+
+				if err != nil {
+					log.SetOutput(ioutil.Discard)
+					log.Println(err.Error())
+				}
+			}
+		}
+	})
+
+	b.Run("original", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			for j := startCheckingNumber; j < stopCheckingNumber; j++ {
+				err := luhnChecker.Validate(int64(j))
+
+				if err != nil {
+					log.SetOutput(ioutil.Discard)
+					log.Println(err.Error())
+				}
+			}
+		}
+	})
 }
