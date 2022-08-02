@@ -30,7 +30,6 @@ func Test_handleAddAndGetRequests(t *testing.T) {
 	type want struct {
 		code              int
 		response          string
-		locationHeader    string
 		contentTypeHeader string
 		contentEncoding   string
 	}
@@ -222,7 +221,11 @@ func getServerForTestAndPrepareDatabase() *httptest.Server {
 	}
 
 	// delete all orders by test user
-	orderService.DeleteOrdersByUserID(user.ID.Int64)
+	err = orderService.DeleteOrdersByUserID(user.ID.Int64)
+
+	if err != nil {
+		logger.Error(err.Error())
+	}
 
 	return server
 }
