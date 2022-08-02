@@ -6,11 +6,8 @@ import (
 	"testing"
 )
 
-func Example() {
-	var correctOrderNumber, wrongOrderNumber int64
-
-	correctOrderNumber = 79927398713
-	wrongOrderNumber = 111222333
+func ExampleValidate() {
+	var correctOrderNumber int64 = 79927398713
 
 	luhnChecker := GetLuhnAlgorithmChecker()
 
@@ -25,8 +22,16 @@ func Example() {
 		fmt.Print(" is correct. ")
 	}
 
+	// Output:Order number 79927398713 is correct.
+}
+
+func ExampleValidateWrong() {
+	var wrongOrderNumber int64 = 111222333
+
+	luhnChecker := GetLuhnAlgorithmChecker()
+
 	// process the wrong order number
-	err = luhnChecker.Validate(wrongOrderNumber)
+	err := luhnChecker.Validate(wrongOrderNumber)
 	fmt.Print("Order number ")
 	fmt.Print(wrongOrderNumber)
 
@@ -36,7 +41,7 @@ func Example() {
 		fmt.Print(" is correct. ")
 	}
 
-	// Output:Order number 79927398713 is correct. Order number 111222333 is wrong.
+	// Output:Order number 111222333 is wrong.
 }
 
 func Test_Validate(t *testing.T) {
