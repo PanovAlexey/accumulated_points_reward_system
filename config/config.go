@@ -1,3 +1,5 @@
+// Package config - a package that stores the global application configuration with all settings.
+//It is filled at the start of the application with data from the ENV file and the console.
 package config
 
 import (
@@ -33,6 +35,7 @@ type externalSystemsConfig struct {
 	AccrualSystemAddress string `envconfig:"accrual_system_address" default:"http://localhost:8080/api/orders/"`
 }
 
+// NewConfig returns the initialized configuration structure
 func NewConfig() Config {
 	config := Config{}
 
