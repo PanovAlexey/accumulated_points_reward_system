@@ -1,3 +1,7 @@
+/*
+Package luhn contains methods that implement the ability to check for the correctness of a numerical number
+using the Luhn algorithm. More information about the algorithm: https://en.wikipedia.org/wiki/Luhn_algorithm
+*/
 package luhn
 
 import (
