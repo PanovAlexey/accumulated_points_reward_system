@@ -30,7 +30,9 @@ import (
 	"golang.org/x/tools/go/analysis/passes/unreachable"
 	"golang.org/x/tools/go/analysis/passes/unsafeptr"
 	"golang.org/x/tools/go/analysis/passes/unusedresult"
+	"honnef.co/go/tools/simple"
 	"honnef.co/go/tools/staticcheck"
+	"honnef.co/go/tools/stylecheck"
 )
 
 func main() {
@@ -149,7 +151,15 @@ func main() {
 		staticcheck.Analyzers["SA9003"],
 		staticcheck.Analyzers["SA9004"],
 		staticcheck.Analyzers["SA9005"],
- 
+
+		// staticcheck.io package other analyzers
+		staticcheck.Analyzers["SA4022"],
+
+		simple.Analyzers["S1009"],
+
+		stylecheck.Analyzers["ST1013"],
+		stylecheck.Analyzers["ST1012"],
 	)
+
 	multichecker.Main(analyzerList...)
 }
